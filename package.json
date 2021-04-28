@@ -20,6 +20,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "discord.js": "^12.5.3",
+    "tmp": "^0.2.1",
     "dotenv": "^8.2.0",
     "node-html-to-image": "^3.1.0",
     "transporttycoon": "^1.2.5"
