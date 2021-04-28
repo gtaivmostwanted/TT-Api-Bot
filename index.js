@@ -5,9 +5,9 @@ const tmp = require('tmp');
 const fs = require('fs');
 const axios = require('axios');
 const htmlToImage = require('node-html-to-image');
-
+const { TransportTycoon } = require('transporttycoon');
 const TT = axios.create({
-  baseURL: 'http://server.tycoon.community:30125/status',
+  baseURL: 'http://server.tycoon.community:30120/status',
   headers: {
     'X-Tycoon-Key': 'nFdioVX2DSTGbjT4KLWkcyE030c3VyKOoUjr7'
   }
@@ -22,7 +22,12 @@ bot.on('ready', () => {
   console.info('TTApiBot is now operational with alot of help from https://github.com/sadboilogan.');
   bot.user.setActivity('Transport Tycoon', {type: 'WATCHING'})
 });
-
+(async () => {
+  const TT = new TransportTycoon('API KEY', true);
+  await TT.setupCharges();
+  const economy = await TT.getEconomyInfo();
+  console.log(economy);
+})();
 function createAndSendTemp(msg, data, fileName) {
   tmp.file((err, path, fd, cleanupCallback) => {
     fs.writeFileSync(path, data);
@@ -99,5 +104,5 @@ bot.on('message', async (msg) => {
 });
 
 
- //Credits:PlagueBringer22#6238 "original bot code" sadboilogan"Almost complete bot Re-Write
-// change number here to restart bot:5
+ //Credits:PlagueBringer22#6238"original bot code" sadboilogan"Almost complete bot Re-Write, Elfshot#0007 "Remade Inventory Command"
+// Edit Number to force restart Bot:2
