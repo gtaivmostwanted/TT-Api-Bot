@@ -86,7 +86,7 @@ bot.on('message', async (msg) => {
       htmlData += "</table>"
       console.log(htmlData);
       const img = await htmlToImage({html: htmlData});
-      msg.channel.send(new Discord.MessageAttachment(img,`inventory${args[1]}.png`))
+      msg.channel.send(new Discord.Attachment(img,`inventory${args[1]}.png`))
     
     } else {
       const response = await TT(`/${args[0]}${args[1] ? `/${args[1]}` : ''}`);
