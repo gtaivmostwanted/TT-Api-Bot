@@ -1,0 +1,27 @@
+{
+  "name": "tt-api-bot",
+  "version": "1.0.0",
+  "description": "Basic API bot for Transport Tycoon (FiveM Server)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gtaivmostwanted/TT-Api-Bot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gtaivmostwanted/TT-Api-Bot/issues"
+  },
+  "homepage": "https://github.com/gtaivmostwanted/TT-Api-Bot#readme",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "discord.js": "^12.5.3",
+    "dotenv": "^8.2.0",
+    "node-html-to-image": "^3.1.0",
+    "transporttycoon": "^1.2.5"
+  }
+}
