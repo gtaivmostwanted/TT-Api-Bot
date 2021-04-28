@@ -7,7 +7,7 @@ const axios = require('axios');
 const htmlToImage = require('node-html-to-image');
 const { TransportTycoon } = require('transporttycoon');
 const TT = axios.create({
-  baseURL: 'http://server.tycoon.community:30120/status',
+  baseURL: 'http://na.tycoon.community:30120/status',
   headers: {
     'X-Tycoon-Key': 'nFdioVX2DSTGbjT4KLWkcyE030c3VyKOoUjr7'
   }
@@ -15,7 +15,6 @@ const TT = axios.create({
 
 const bot = new Discord.Client();
 const TOKEN = process.env.TOKEN;
-
 bot.login(TOKEN);
 
 bot.on('ready', () => {
@@ -31,7 +30,7 @@ bot.on('ready', () => {
 function createAndSendTemp(msg, data, fileName) {
   tmp.file((err, path, fd, cleanupCallback) => {
     fs.writeFileSync(path, data);
-    msg.channel.send(new Discord.Attachment(path, fileName)).then((msgres) => {
+    msg.channel.send(new Discord.MessageAttachment(path, fileName)).then((msgres) => {
       cleanupCallback();
     })
   })
@@ -50,15 +49,57 @@ bot.on('message', async (msg) => {
   if (args.length < 1) return;
 
   try {
-    if (args[0] === 'advanced') args[0] = `${args[0]}/`
-    const response = await TT(`/${args[0]}${args[1] ? `/${args[1]}` : ''}`);
-    const data = response.data;
+    // Custom inventory command, exists outside of the default endpoint as arg section
+    if (args[0] === 'inventory') {
+      const response = await TT(`/data/${args[1]}`);
+      const inventoryData = response.data.data.inventory;
+      const inventoryDataKeys = Object.keys(inventoryData);
+      let inventory = [];
+      inventoryDataKeys.forEach((value) => {
+        let item = [value, inventoryData[value]['amount']];
+        inventory.push(item);
+      })
+      let htmlData = `<table><tr><th>Item</th><th>Amount</th></tr>`;
+      inventory.forEach((item) => {
+        let name = item[0]
+        if (name.includes('|')){
+          let segments = name.split('|')
+          if (segments.length < 3) {
+            name = `${segments[0]}: ${segments[1]}`;
+          } else if (segments.length == 3){
+            if (segments[0].includes('note')) {
+              name = `${segments[0]}: ${segments[1]}`;
+            } else name = `${segments[0]}: ${segments[2]}`;
+          }
+        }
+        const amount = item[1];
+        name = name.replace('_', ' ');
+        name = name.replace('"',' ');
+        name = name.replace("/(<img>.*?</img>)/","");
+        name = name.replace(/\w\S*/g, (w) => (w.replace(/^\w/, (c) => c.toUpperCase())));
 
-    if (typeof data === 'object' || Array.isArray(data)) {
+        htmlData += `<tr>
+        <td>${name}</td>
+        <td>${amount}</td>
+        </tr>`;
+      })
+      htmlData += "</table>"
+      console.log(htmlData);
+      const img = await htmlToImage({html: htmlData});
+      msg.channel.send(new Discord.MessageAttachment(img,`inventory${args[1]}.png`))
+    
+    } else {
+      const response = await TT(`/${args[0]}${args[1] ? `/${args[1]}` : ''}`);
+      const data = response.data;
+      if (typeof data === 'object' || Array.isArray(data)) {
       createAndSendTemp(msg, JSON.stringify(data, null, 2), (args[0].includes('.json') ? args[0] : `${args[0]}.json`));
+    
+    
     } else if (/<\/?[a-z][\s\S]*>/i.test(data)) {
       const img = await htmlToImage({html: data});
       msg.channel.send(new Discord.Attachment(img, `${args[1]}.png` ))
+    
+    
     } else if (args[0] === 'economy.csv') {
       const splitEconomy = data.split('\n');
       splitEconomy.pop();
@@ -96,7 +137,9 @@ bot.on('message', async (msg) => {
       `
       const img = await htmlToImage({html: htmlData});
       msg.channel.send(new Discord.Attachment(img,`economy.png`))
-    }
+    }}
+
+
   } catch(err) {
     msg.channel.send(`An error occured! ${err}`)
     console.log(err)
@@ -104,5 +147,5 @@ bot.on('message', async (msg) => {
 });
 
 
- //Credits:PlagueBringer22#6238"original bot code" sadboilogan"Almost complete bot Re-Write, Elfshot#0007 "Remade Inventory Command"
+//Credits:PlagueBringer22#6238"original bot code" sadboilogan"Almost complete bot Re-Write, Elfshot#0007 "Remade Inventory Command"
 // Edit Number to force restart Bot:2
