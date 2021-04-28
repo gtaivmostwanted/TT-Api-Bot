@@ -7,7 +7,7 @@ const axios = require('axios');
 const htmlToImage = require('node-html-to-image');
 const { TransportTycoon } = require('transporttycoon');
 const TT = axios.create({
-  baseURL: 'http://na.tycoon.community:30120/status',
+  baseURL: 'http://server.tycoon.community:30120/status',
   headers: {
     'X-Tycoon-Key': 'nFdioVX2DSTGbjT4KLWkcyE030c3VyKOoUjr7'
   }
@@ -30,7 +30,7 @@ bot.on('ready', () => {
 function createAndSendTemp(msg, data, fileName) {
   tmp.file((err, path, fd, cleanupCallback) => {
     fs.writeFileSync(path, data);
-    msg.channel.send(new Discord.MessageAttachment(path, fileName)).then((msgres) => {
+    msg.channel.send(new Discord.Attachment(path, fileName)).then((msgres) => {
       cleanupCallback();
     })
   })
