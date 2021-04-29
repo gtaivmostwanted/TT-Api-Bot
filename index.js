@@ -6,14 +6,19 @@ const fs = require('fs');
 const axios = require('axios');
 const htmlToImage = require('node-html-to-image');
 const { TransportTycoon } = require('transporttycoon');
-const TT = process.env.TYCOONTOKEN;
+const TT = axios.create({
+  baseURL: 'http://server.tycoon.community:30120/status',
+  headers: {
+    'X-Tycoon-Key': 'nFdioVX2DSTGbjT4KLWkcyE030c3VyKOoUjr7'
+  }
+});
 
 const bot = new Discord.Client();
 const TOKEN = process.env.TOKEN;
 bot.login(TOKEN);
 
 bot.on('ready', () => {
-  console.info('TTApiBot is now operational with alot of help from sadboilogan & Elfshot.');
+  console.info('TTApiBot is now operational with alot of help from https://github.com/sadboilogan.');
   bot.user.setActivity('Transport Tycoon', {type: 'WATCHING'})
 });
 (async () => {
