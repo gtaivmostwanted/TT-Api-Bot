@@ -104,7 +104,7 @@ bot.on('message', async (msg) => {
           title: "Tycoon API Bot",
           fields: [{
           name: "Charges Remaining",
-          value: (charges);
+          value: (charges)
           }
        ],
           timestamp: new Date(),
