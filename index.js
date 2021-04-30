@@ -1,26 +1,29 @@
+//Requirements
 require('dotenv').config();
-
 const Discord = require('discord.js');
 const tmp = require('tmp');
 const fs = require('fs');
 const axios = require('axios');
 const htmlToImage = require('node-html-to-image');
 const { TransportTycoon } = require('transporttycoon');
-
 const bot = new Discord.Client();
 const TOKEN = process.env.TOKEN;
 bot.login(TOKEN);
 
+//Bot Starting And Console Output
+bot.on('ready', () => {
+  console.info('TTApiBot is now operational with alot of help from https://github.com/sadboilogan.');
+  bot.user.setActivity('Transport Tycoon', {type: 'WATCHING'})
+});
+
+//Tycoon Server Selection And Key
 const TT = axios.create({
   baseURL: 'http://server.tycoon.community:30120/status',
   headers: {'X-Tycoon-Key': process.env.TYCOONTOKEN}
 });
 
 
-bot.on('ready', () => {
-  console.info('TTApiBot is now operational with alot of help from https://github.com/sadboilogan.');
-  bot.user.setActivity('Transport Tycoon', {type: 'WATCHING'})
-});
+
 //Loading TransportTycoon Module
 (async () => {
   const TT = new TransportTycoon('API KEY', true);
@@ -89,33 +92,6 @@ bot.on('message', async (msg) => {
       const img = await htmlToImage({html: htmlData});
       msg.channel.send(new Discord.Attachment(img,`inventory${args[1]}.png`))
     
-    //Embed system test for charges
-    } else {
-      if (args[0] === 'charges') {
-      const response = await TT(`/charges.json`);
-      const charges = response.data;
-
-        message.channel.send({embed: {
-         color: 3447003,
-         author: {
-         name: client.user.username,
-         icon_url: client.user.avatarURL
-         },
-          title: "Tycoon API Bot",
-          fields: [{
-          name: "Charges Remaining",
-          value: (charges)
-          }
-       ],
-          timestamp: new Date(),
-          footer: {
-          icon_url: client.user.avatarURL,
-          text: "http://tycoon.community"
-           }
-        }
-      });
-
-
     } else {
       const response = await TT(`/${args[0]}${args[1] ? `/${args[1]}` : ''}`);
       const data = response.data;
@@ -127,7 +103,7 @@ bot.on('message', async (msg) => {
       const img = await htmlToImage({html: data});
       msg.channel.send(new Discord.Attachment(img, `${args[1]}.png` ))
     
-    
+    // Custom Economy Command Converting CSV to img
     } else if (args[0] === 'economy.csv') {
       const splitEconomy = data.split('\n');
       splitEconomy.pop();
@@ -175,5 +151,5 @@ bot.on('message', async (msg) => {
 });
 
 
-//Credits:PlagueBringer22#6238"original bot code" sadboilogan"Almost complete bot Re-Write, Elfshot#0007 "Remade Inventory Command"
+//Credits:sadboilogan"Almost complete bot Re-Write, Elfshot#0007 "Remade Inventory Command"
 // Edit Number to force restart Bot:2
