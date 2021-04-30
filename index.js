@@ -22,12 +22,6 @@ bot.on('ready', () => {
   bot.user.setActivity('Transport Tycoon', {type: 'WATCHING'})
 });
 
-//Tycoon Server Selection And Key
-const TT = axios.create({
-  baseURL: 'http://server.tycoon.community:30120/status',
-  headers: {'X-Tycoon-Key': process.env.TYCOONTOKEN}
-});
-
 //Loading TransportTycoon Module
 (async () => {
   const TT = new TransportTycoon('API KEY', true);
