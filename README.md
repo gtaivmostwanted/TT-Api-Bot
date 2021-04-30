@@ -10,7 +10,3 @@ https://github.com/Elfshot
 
 
 My Discord for testing and such http://discord.gg/3p2pQSxZRW
-
-
-if you dont want to self host you can invite the hosted bot to your server
-https://discord.com/api/oauth2/authorize?client_id=826359426457534475&permissions=67226624&scope=bot
