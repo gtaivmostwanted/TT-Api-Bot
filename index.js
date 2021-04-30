@@ -21,6 +21,7 @@ bot.on('ready', () => {
   console.info('TTApiBot is now operational with alot of help from https://github.com/sadboilogan.');
   bot.user.setActivity('Transport Tycoon', {type: 'WATCHING'})
 });
+//Loading TransportTycoon Module
 (async () => {
   const TT = new TransportTycoon('API KEY', true);
   await TT.setupCharges();
@@ -88,6 +89,33 @@ bot.on('message', async (msg) => {
       const img = await htmlToImage({html: htmlData});
       msg.channel.send(new Discord.Attachment(img,`inventory${args[1]}.png`))
     
+    //Embed system test for charges
+    } else {
+      if (args[0] === 'charges') {
+      const response = await TT(`/charges.json`);
+      const charges = response.data;
+
+        message.channel.send({embed: {
+         color: 3447003,
+         author: {
+         name: client.user.username,
+         icon_url: client.user.avatarURL
+         },
+          title: "Tycoon API Bot",
+          fields: [{
+          name: "Charges Remaining",
+          value: (charges);
+          }
+       ],
+          timestamp: new Date(),
+          footer: {
+          icon_url: client.user.avatarURL,
+          text: "http://tycoon.community"
+           }
+        }
+      });
+
+
     } else {
       const response = await TT(`/${args[0]}${args[1] ? `/${args[1]}` : ''}`);
       const data = response.data;
