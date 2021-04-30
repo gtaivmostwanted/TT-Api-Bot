@@ -10,6 +10,12 @@ const bot = new Discord.Client();
 const TOKEN = process.env.TOKEN;
 bot.login(TOKEN);
 
+//Tycoon Server Selection And Key
+const TT = axios.create({
+  baseURL: 'http://server.tycoon.community:30120/status',
+  headers: {'X-Tycoon-Key': process.env.TYCOONTOKEN}
+});
+
 //Bot Starting And Console Output
 bot.on('ready', () => {
   console.info('TTApiBot is now operational with alot of help from https://github.com/sadboilogan.');
@@ -21,8 +27,6 @@ const TT = axios.create({
   baseURL: 'http://server.tycoon.community:30120/status',
   headers: {'X-Tycoon-Key': process.env.TYCOONTOKEN}
 });
-
-
 
 //Loading TransportTycoon Module
 (async () => {
