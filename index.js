@@ -55,49 +55,35 @@ bot.on('message', async (msg) => {
   try {
     // Custom inventory command, exists outside of the default endpoint as arg section
     if (args[0] === 'inventory') {
-      const response = await TT(`/data/${args[1]}`);
-      const inventoryData = response.data.data.inventory;
-      const inventoryDataKeys = Object.keys(inventoryData);
-      let inventory = inventoryDataKeys.map((value) => [value, inventoryData[value].amount]);
-      let htmlData = '<table><tr><th>Item</th><th>Amount</th></tr>';
-      inventory.forEach((item) => {
-        let name = item[0];
-        if (name.includes('|')){
-          let segments = name.split('|');
-          if (segments.length < 3) {
-            name = `${segments[0]}: ${segments[1]}`;
-          } else if (segments.length == 3){
-            if (segments[0].includes('note')) {
-              name = `${segments[0]}: ${segments[1]}`;
-            } else name = `${segments[0]}: ${segments[2]}`;
-          }
-        }
-        const amount = item[1];
-        name = name.replace('_', ' ');
-        name = name.replace('"',' ');
-        name = name.replace('/(<img>.*?</img>)/','');
-        name = name.replace(/\w\S*/g, (w) => (w.replace(/^\w/, (c) => c.toUpperCase())));
-
-        htmlData += `<tr>
-        <td>${name}</td>
-        <td>${amount}</td>
-        </tr>`;
+      const { data: { data: { inventory } } } = await TT(`/dataadv/${args[1]}`);
+      let htmlData = '<table><tr><th>Item</th><th>Amount</th><th>Weight</th><th>Total Weight</th></tr>';
+      Object.keys(inventory).forEach((itemId) => {
+        htmlData += `<tr><td>${inventory[itemId].name}</td><td>${inventory[itemId].amount}</td><td>${inventory[itemId].weight}</td><td>${(inventory[itemId].weight * inventory[itemId].amount).toFixed(2)}</td></tr>`;
       });
-      htmlData += '</table>';
+      htmlData += `
+      </table>
+      <style>
+        th, td {
+          padding-right: 1.0rem;
+        }
+        * {
+          font-family: Comic Sans MS;
+        }
+      </style>
+      `;
       const img = await htmlToImage({ html: htmlData });
-      msg.channel.send(new Discord.MessageAttachment(img,`inventory${args[1]}.png`));
-    
+      msg.channel.send(new Discord.MessageAttachment(img, `inventory-${args[1]}.png`));
     } else {
       const response = await TT(`/${args[0]}${args[1] ? `/${args[1]}` : ''}`);
       const data = response.data;
       if (typeof data === 'object' || Array.isArray(data)) {
         createAndSendTemp(msg, JSON.stringify(data, null, 2), (args[0].includes('.json') ? args[0] : `${args[0]}.json`));
-    
-    
+
+
       } else if (/<\/?[a-z][\s\S]*>/i.test(data)) {
         const img = await htmlToImage({ html: data });
-        msg.channel.send(new Discord.MessageAttachment(img, `${args[1]}.png` ));
-    
+        msg.channel.send(new Discord.MessageAttachment(img, `${args[1]}.png`));
+
         // Custom Economy Command Converting CSV to img
       } else if (args[0] === 'economy.csv') {
         const splitEconomy = data.split('\n');
@@ -135,11 +121,12 @@ bot.on('message', async (msg) => {
       </style>
       `;
         const img = await htmlToImage({ html: htmlData });
-        msg.channel.send(new Discord.MessageAttachment(img,'economy.png'));
-      }}
+        msg.channel.send(new Discord.MessageAttachment(img, 'economy.png'));
+      }
+    }
 
 
-  } catch(err) {
+  } catch (err) {
     msg.channel.send(`An error occured! ${err}`);
     console.log(err);
   }
