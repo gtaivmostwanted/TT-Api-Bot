@@ -32,7 +32,7 @@ bot.on('ready', () => {
 function createAndSendTemp(msg, data, fileName) {
   tmp.file((err, path, fd, cleanupCallback) => {
     fs.writeFileSync(path, data);
-    msg.channel.send(new Discord.Attachment(path, fileName)).then((msgres) => {
+    msg.channel.send(new Discord.MessageAttachment(path, fileName)).then((msgres) => {
       cleanupCallback();
     })
   })
@@ -138,7 +138,7 @@ bot.on('message', async (msg) => {
       </style>
       `
       const img = await htmlToImage({html: htmlData});
-      msg.channel.send(new Discord.Attachment(img,`economy.png`))
+      msg.channel.send(new Discord.MessageAttachment(img,`economy.png`))
     }}
 
 
