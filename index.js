@@ -65,9 +65,11 @@ bot.on('message', async (msg) => {
       <style>
         th, td {
           padding-right: 1.0rem;
+          color: #ffffff;
         }
         * {
           font-family: Comic Sans MS;
+          background-color: #000a12;
         }
       </style>
       `;
