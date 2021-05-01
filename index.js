@@ -56,11 +56,7 @@ bot.on('message', async (msg) => {
       const response = await TT(`/data/${args[1]}`);
       const inventoryData = response.data.data.inventory;
       const inventoryDataKeys = Object.keys(inventoryData);
-      let inventory = [];
-      inventoryDataKeys.forEach((value) => {
-        let item = [value, inventoryData[value]['amount']];
-        inventory.push(item);
-      })
+      let inventory = inventoryDataKeys.map((value) => [value, inventoryData[value].amount])
       let htmlData = `<table><tr><th>Item</th><th>Amount</th></tr>`;
       inventory.forEach((item) => {
         let name = item[0]
