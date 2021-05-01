@@ -32,6 +32,7 @@ bot.on('ready', () => {
 
 function createAndSendTemp(msg, data, fileName) {
   tmp.file((err, path, fd, cleanupCallback) => {
+    if (err) throw new Error(err);
     fs.writeFileSync(path, data);
     msg.channel.send(new Discord.MessageAttachment(path, fileName)).then(() => {
       cleanupCallback();
@@ -83,7 +84,6 @@ bot.on('message', async (msg) => {
         </tr>`;
       });
       htmlData += '</table>';
-      console.log(htmlData);
       const img = await htmlToImage({ html: htmlData });
       msg.channel.send(new Discord.MessageAttachment(img,`inventory${args[1]}.png`));
     
