@@ -88,7 +88,7 @@ bot.on('message', async (msg) => {
       htmlData += "</table>"
       console.log(htmlData);
       const img = await htmlToImage({html: htmlData});
-      msg.channel.send(new Discord.Attachment(img,`inventory${args[1]}.png`))
+      msg.channel.send(new Discord.MessageAttachment(img,`inventory${args[1]}.png`))
     
     } else {
       const response = await TT(`/${args[0]}${args[1] ? `/${args[1]}` : ''}`);
@@ -99,7 +99,7 @@ bot.on('message', async (msg) => {
     
     } else if (/<\/?[a-z][\s\S]*>/i.test(data)) {
       const img = await htmlToImage({html: data});
-      msg.channel.send(new Discord.Attachment(img, `${args[1]}.png` ))
+      msg.channel.send(new Discord.MessageAttachment(img, `${args[1]}.png` ))
     
     // Custom Economy Command Converting CSV to img
     } else if (args[0] === 'economy.csv') {
