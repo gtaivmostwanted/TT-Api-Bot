@@ -22,13 +22,18 @@ bot.on('ready', () => {
   bot.user.setActivity('Transport Tycoon', { type: 'WATCHING' });
 });
 
-//Loading TransportTycoon Module
-// (async () => {
-//   const TT = new TransportTycoon('API KEY', true);
-//   await TT.setupCharges();
-//   const economy = await TT.getEconomyInfo();
-//   console.log(economy);
-// })();
+const servers = [
+  'server.tycoon.community:30120',
+  'server.tycoon.community:30122',
+  'server.tycoon.community:30123',
+  'server.tycoon.community:30124',
+  'server.tycoon.community:30125',
+  'na.tycoon.community:30120',
+  'na.tycoon.community:30122',
+  'na.tycoon.community:30123',
+  'na.tycoon.community:30124',
+  'na.tycoon.community:30125',
+];
 
 function createAndSendTemp(msg, data, fileName) {
   tmp.file((err, path, fd, cleanupCallback) => {
@@ -122,6 +127,90 @@ bot.on('message', async (msg) => {
 
       const img = await htmlToImage({ html: htmlData });
       msg.channel.send(new Discord.MessageAttachment(img, `skills-${args[1]}.png`));
+    } else if (args[0] === 'server') {
+      if (!args[1] || Number.isNaN(parseInt(args[1]))) return msg.reply('Please enter a number from 1-10!');
+      const srvId = parseInt(args[1]);
+
+      try {
+        const { data: serverData } = await axios(`http://${servers[srvId - 1]}/status/widget/players.json`);
+        const playercount = serverData.players.length;
+
+        if (serverData.players.length > 32) serverData.players.length = 32;
+
+        const img = await htmlToImage({
+          html: `
+          <h3><u>Server {{srvId}}</u></h3>
+          <ul>
+            <li>Uptime: {{server.uptime}}</li>
+            <li>Players: {{playercount}}/{{server.limit}}</li>
+            <li>DXP: {{#if server.dxp.[0]}}{{server.dxp.[1]}}{{else}}No{{/if}}</li>
+          </ul>
+
+          <h3><u>Players</u></h3>
+          <table>
+            <tr>
+              <th></th>
+              <th>Name</th>
+              <th>ID</th>
+              <th>Job</th>
+              <th>Staff</th>
+              <th>Donator</th>
+            </tr>
+            {{#each players}}
+              <tr>
+                {{#if this.[3]}}
+                  <td><img src="{{this.[3]}}"></td>
+                {{else}}
+                  <td><img src="https://discord.com/assets/1cbd08c76f8af6dddce02c5138971129.png"></td>
+                {{/if}}
+                <td>{{this.[0]}}</td>
+                <td>{{this.[2]}}</td>
+                <td>{{this.[5]}}</td>
+                <td>{{#if this.[4]}}Yes{{else}}No{{/if}}</td>
+                <td>{{#if this.[6]}}Yes{{else}}No{{/if}}</td>
+              </tr>
+            {{/each}}
+          </table>
+
+          <style>
+            h3 {
+              padding-left: 50px;
+            }
+
+            td, th {
+              padding-left: 50px;
+            }
+          
+            td img {
+              vertical-align: middle;
+              width: 50px;
+              padding-right: 10px;
+            }
+
+            li {
+              font-size: 40px
+            }
+          
+            * {
+              font-family: Comic Sans MS;
+              background-color: #000a12;
+              color: #ffffff;
+            }
+          </style>`,
+          content: {
+            players: serverData.players,
+            server: serverData.server,
+            playercount,
+            srvId
+          }
+        });
+        console.log(img);
+        msg.channel.send(new Discord.MessageAttachment(img, `skills-${args[1]}.png`));
+      } catch (e) {
+        console.log(e);
+        msg.reply('Uh oh, server seems unresponsive! ' + e);
+      }
+
     } else {
       const response = await TT(`/${args[0]}${args[1] ? `/${args[1]}` : ''}`);
       const data = response.data;
