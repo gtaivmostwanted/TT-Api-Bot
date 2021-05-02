@@ -75,6 +75,53 @@ bot.on('message', async (msg) => {
       `;
       const img = await htmlToImage({ html: htmlData });
       msg.channel.send(new Discord.MessageAttachment(img, `inventory-${args[1]}.png`));
+    } else if (args[0] === 'skills') {
+      const { data: { data: { gaptitudes_v } } } = await TT(`/data/${args[1]}`);
+      let htmlData = '';
+
+      Object.keys(gaptitudes_v).forEach((cat) => {
+        htmlData += `
+        <h3><u>${cat.charAt(0).toUpperCase() + cat.slice(1)}</u></h3>
+        <table>
+          <tr>
+            <th>Skill</th>
+            <th>Level</th>
+          </tr>
+        `;
+
+
+        Object.keys(gaptitudes_v[cat]).forEach((skill) => {
+          const skillLevel = Math.floor((Math.sqrt(1 + 8 * gaptitudes_v[cat][skill] / 5) - 1) / 2);
+          htmlData += `
+          <tr>
+            <td>${skill === 'skill' ? cat.charAt(0).toUpperCase() + cat.slice(1) : skill.charAt(0).toUpperCase() + skill.slice(1)}</td>
+            <td>${skillLevel}/${skill === 'strength' ? '30' : '100'}</td>
+          </tr>`;
+        });
+        htmlData += '</table>';
+      });
+
+      htmlData += `
+      <style>
+        h3 {
+          padding-left: 80px;
+          color: #EAEAEA;
+        }
+      
+        td, th {
+          padding-left: 40px;
+          color: #ffffff;
+        }
+      
+        * {
+          font-family: Comic Sans MS;
+          background-color: #000a12;
+          max-width: 260px;
+        }
+      </style>`;
+
+      const img = await htmlToImage({ html: htmlData });
+      msg.channel.send(new Discord.MessageAttachment(img, `skills-${args[1]}.png`));
     } else {
       const response = await TT(`/${args[0]}${args[1] ? `/${args[1]}` : ''}`);
       const data = response.data;
