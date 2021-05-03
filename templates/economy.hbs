@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" style="width: 1326px;">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>skills</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
+</head>
+
+<body style="background: #121212;width: 100%;height: 100%;">
+    <h1 style="text-align: center;color: rgb(255,255,255);">Economy</h1>
+    <div class="table-responsive">
+        <table class="table">
+            <thead style="color: rgb(255,255,255);">
+                <tr>
+                    <th>Time</th>
+                    <th>Debt</th>
+                    <th>Money</th>
+                    <th>Debts</th>
+                    <th>Millionaires</th>
+                    <th>Billionaires</th>
+                    <th>Users</th>
+                    <th>Players</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each economyData as |economy|}}
+                    <tr style="color: rgb(255,255,255);">
+                        <td>{{economy.time}}</td>
+                        <td>{{economy.debt}}</td>
+                        <td>{{economy.money}}</td>
+                        <td>{{economy.debts}}</td>
+                        <td>{{economy.millionaires}}</td>
+                        <td>{{economy.billionaires}}</td>
+                        <td>{{economy.users}}</td>
+                        <td>{{economy.players}}</td>
+                    </tr>
+                {{/each}}
+                
+            </tbody>
+        </table>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

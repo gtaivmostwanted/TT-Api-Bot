@@ -145,6 +145,35 @@ bot.on('message', async (msg) => {
         msg.reply('Uh oh, server seems unresponsive! ' + e);
       }
 
+    } else if (args[0] === 'economy') {
+      const { data } = await TT('/economy.csv');
+      const splitEconomy = data.split('\n');
+      splitEconomy.pop();
+      const shortData = splitEconomy.splice(splitEconomy.length - 20);
+
+      const economyData = [];
+      shortData.forEach((economy) => {
+        let split = economy.split(';');
+        economyData.push({
+          time: new Date(split[0] * 1000).toLocaleString(),
+          debt: addCommas(split[1]),
+          money: addCommas(split[2]),
+          debts: addCommas(split[3]),
+          millionaires: addCommas(split[4]),
+          billionaires: addCommas(split[5]),
+          users: addCommas(split[6]),
+          players: addCommas(split[7])
+        });
+
+      });
+
+      const img = await htmlToImage({ 
+        html: useTemplate('economy'),
+        content: {
+          economyData: economyData
+        }
+      });
+      msg.channel.send(new Discord.MessageAttachment(img, 'economy.png'));
     } else {
       const response = await TT(`/${args[0]}${args[1] ? `/${args[1]}` : ''}`);
       const data = response.data;
@@ -156,44 +185,6 @@ bot.on('message', async (msg) => {
         const img = await htmlToImage({ html: data });
         msg.channel.send(new Discord.MessageAttachment(img, `${args[1]}.png`));
 
-        // Custom Economy Command Converting CSV to img
-      } else if (args[0] === 'economy.csv') {
-        const splitEconomy = data.split('\n');
-        splitEconomy.pop();
-        const shortData = splitEconomy.splice(splitEconomy.length - 10);
-        let htmlData = '<table><tr><th>Time</th><th>Debt</th><th>Money</th><th>Debts</th><th>Millionaires</th><th>Billionaires</th><th>Users</th><th>Players</th></tr>';
-        shortData.forEach((economy) => {
-          let split = economy.split(';');
-          htmlData += `
-        <tr>
-          <td>${new Date(split[0] * 1000).toLocaleString()}</td>
-          <td>${addCommas(split[1])}</td>
-          <td>${addCommas(split[2])}</td>
-          <td>${addCommas(split[3])}</td>
-          <td>${addCommas(split[4])}</td>
-          <td>${addCommas(split[5])}</td>
-          <td>${addCommas(split[6])}</td>
-          <td>${addCommas(split[7])}</td>
-        </tr>
-        `;
-        });
-
-        htmlData += `</table>
-      <style>
-        * {
-          font-family: Comic Sans MS;
-        }
-        table, th, td {
-          border: 1px solid black;
-          border-collapse: collapse;
-        }
-        th, td {
-          padding: 0.3rem;
-        }
-      </style>
-      `;
-        const img = await htmlToImage({ html: htmlData });
-        msg.channel.send(new Discord.MessageAttachment(img, 'economy.png'));
       }
     }
 
