@@ -66,8 +66,7 @@ bot.on('message', async (msg) => {
       msg.channel.send(new Discord.MessageAttachment(img, `inventory-${args[1]}.png`));
     } else if (args[0] === 'skills') {
       const { data: { data: { gaptitudes_v } } } = await TT(`/data/${args[1]}`);
-      const firstRow = [];
-      const secondRow = [];
+      const skillArr = [];
 
       Object.keys(gaptitudes_v).forEach((cat) => {
         let data = {
@@ -84,10 +83,18 @@ bot.on('message', async (msg) => {
           });
         });
 
+        skillArr.push(data);
+      });
+
+      skillArr.sort((a, b) => a.skills.length - b.skills.length);
+
+      const firstRow = [];
+      const secondRow = [];
+      skillArr.forEach((skill) => {
         if (firstRow.length < 5) {
-          firstRow.push(data);
-        } else  {
-          secondRow.push(data);
+          firstRow.push(skill);
+        } else {
+          secondRow.push(skill);
         }
       });
 
@@ -96,8 +103,7 @@ bot.on('message', async (msg) => {
         content: {
           userId: args[1],
           firstRow,
-          secondRow,
-          thirdRow: []
+          secondRow
         }
       });
       msg.channel.send(new Discord.MessageAttachment(img, `skills-${args[1]}.png`));
