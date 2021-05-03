@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" style="width: 1326px;">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>skills</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
+</head>
+
+<body style="background: #121212;width: 100%;height: 100%;">
+    <h1 style="text-align: center;color: rgb(255,255,255);">Inventory for {{userId}} - {{totalItems}} items</h1>
+    <div class="row">
+        {{#each rows as |row|}}
+        <div class="col">
+            <div class="table-responsive" style="text-align: center;">
+                <table class="table">
+                    <thead style="color: rgb(255,255,255);">
+                        <tr>
+                            <th>Item</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody style="color: rgb(255,255,255);">
+                        {{#each row as |item|}}
+                            <tr>
+                                <td>{{{item.name}}}</td>
+                                <td>{{item.amount}}</td>
+                            </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

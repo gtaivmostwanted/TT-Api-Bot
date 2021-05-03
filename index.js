@@ -45,24 +45,35 @@ bot.on('message', async (msg) => {
     // Custom inventory command, exists outside of the default endpoint as arg section
     if (args[0] === 'inventory') {
       const { data: { data: { inventory } } } = await TT(`/dataadv/${args[1]}`);
-      let htmlData = '<table><tr><th>Item</th><th>Amount</th><th>Weight</th><th>Total Weight</th></tr>';
+      const items = [];
+
       Object.keys(inventory).forEach((itemId) => {
-        htmlData += `<tr><td>${inventory[itemId].name}</td><td>${inventory[itemId].amount}</td><td>${inventory[itemId].weight}</td><td>${(inventory[itemId].weight * inventory[itemId].amount).toFixed(2)}</td></tr>`;
+        items.push({
+          name: inventory[itemId].name,
+          amount: inventory[itemId].amount,
+          weight: inventory[itemId].weight,
+          stripped: inventory[itemId].name.replace(/(<([^>]+)>)/gi, ''),
+          total: (inventory[itemId].weight * inventory[itemId].amount).toFixed(2)
+        });
       });
-      htmlData += `
-      </table>
-      <style>
-        th, td {
-          padding-right: 1.0rem;
-          color: #ffffff;
+
+      items.sort((a, b) => a.stripped.localeCompare(b.stripped));
+
+      const rows = [];
+      const rowLimit = 20;
+      
+      for (let i=0; i < items.length; i += rowLimit) {
+        rows.push(items.slice(i, i + rowLimit));
+      }
+      
+      const img = await htmlToImage({ 
+        html: useTemplate('inventory'),
+        content: {
+          rows,
+          userId: args[1],
+          totalItems: items.length
         }
-        * {
-          font-family: Comic Sans MS;
-          background-color: #000a12;
-        }
-      </style>
-      `;
-      const img = await htmlToImage({ html: htmlData });
+      });
       msg.channel.send(new Discord.MessageAttachment(img, `inventory-${args[1]}.png`));
     } else if (args[0] === 'skills') {
       const { data: { data: { gaptitudes_v } } } = await TT(`/data/${args[1]}`);
