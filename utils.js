@@ -32,9 +32,27 @@ function addCommas(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
+function processErrorCode(code) {
+  switch (code) {
+    case "423":
+      return "This account's data is locked from public view.";
+    case "400":
+      return "Invalid request check input and try again.";
+    case "402":
+      return 'No API charges remaining.';
+    case "404":
+      return 'Invalid Api Route.';
+    case "412":
+      return 'invalid VRPID entered';
+    default:
+      return "No handler request found for code: "+code;
+  }
+}
+
 module.exports = {
   createAndSendTemp,
   useTemplate,
   msToTime,
-  addCommas
+  addCommas,
+  processErrorCode
 };

@@ -3,7 +3,7 @@ require('dotenv').config();
 const Discord = require('discord.js');
 const axios = require('axios');
 const htmlToImage = require('node-html-to-image');
-const { addCommas, createAndSendTemp, msToTime, useTemplate } = require('./utils');
+const { addCommas, createAndSendTemp, msToTime, useTemplate, processErrorCode } = require('./utils');
 const bot = new Discord.Client();
 const TOKEN = process.env.TOKEN;
 bot.login(TOKEN);
@@ -93,6 +93,7 @@ bot.on('message', async (msg) => {
           thirdRow.push(data);
         }
       });
+
 
       const img = await htmlToImage({
         html: useTemplate('skills'), 
@@ -185,7 +186,10 @@ bot.on('message', async (msg) => {
 
 
   } catch (err) {
-    msg.channel.send(`An error occured! ${err}`);
+    // Handling errors by returning statement to the message channel
+    msg.channel.send(processErrorCode(err.response.data.code));
+    // Can instead use the following line if you would rather not customise return values and use the Axios/Request returned message
+    //msg.channel.send(err.response.data.error);
     console.log(err);
   }
 });
