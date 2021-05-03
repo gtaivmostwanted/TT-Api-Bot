@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" style="width: 1326px;">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>players</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+
+<body style="background: #121212;width: 100%;height: 100%;">
+    <h1 style="text-align: center;color: rgb(255,255,255);">Server {{srvId}}</h1>
+    <div style="text-align: center;color: rgb(255,255,255);">
+        <div class="row" style="padding: 0px;margin-bottom: -5px;margin-top: -30px;">
+            <div class="col" style="text-align: center;"><span style="font-size: 25px;"><br>DXP: {{#if server.dxp.[0]}}Active ({{server.dxp.[1]}}) - {{timeRemaining}}{{else}}Inactive{{/if}}<br></span></div>
+        </div>
+        <div class="row" style="margin-bottom: -5px;margin-top: -30px;">
+            <div class="col" style="text-align: center;height: 22%;"><span style="font-size: 25px;"><br>Uptime: {{server.uptime}}<br></span></div>
+        </div>
+        <div class="row" style="margin-bottom: -5px;margin-top: -30px;">
+            <div class="col" style="text-align: center;"><span style="font-size: 25px;"><br>Players: {{playercount}}/{{server.limit}}<br><br></span></div>
+        </div>
+    </div>
+    <div class="table-responsive" style="color: rgb(255,255,255);">
+        <table class="table table-striped">
+            <thead>
+                <tr style="color: rgb(255,255,255);">
+                    <th style="width: 120px;"></th>
+                    <th>Name</th>
+                    <th>ID</th>
+                    <th>Job</th>
+                    <th>Staff</th>
+                    <th>Donator</th>
+                </tr>
+            </thead>
+            <tbody style="color: rgb(255,255,255);">
+                {{#each players}}
+                    <tr>
+                        <td style="text-align: center;"><img style="width: 80px;text-align: center;" src="{{#if this.[3]}}{{this.[3]}}{{else}}https://cdn.discordapp.com/attachments/792369674595598357/838594831390867547/frame_00_delay-0.png{{/if}}"></td>
+                        <td>{{this.[0]}}</td>
+                        <td>{{this.[2]}}</td>
+                        <td>{{#if this.[5]}}{{this.[5]}}{{else}}Unemployed{{/if}}</td>
+                        <td>{{#if this.[4]}}Yes{{else}}No{{/if}}</td>
+                        <td>{{#if this.[6]}}Yes{{else}}No{{/if}}</td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
