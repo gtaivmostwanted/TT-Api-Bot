@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en" style="width: 1326px;">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
@@ -9,85 +8,58 @@
     <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 
-<body style="background: #121212;width: 100%;height: 100%;">
-    <h1 style="text-align: center;color: rgb(255,255,255);">Skills for {{userId}}</h1>
-    <div class="row" style="color: rgb(255,255,255);">
-        <div class="col">
+<body class="text-light p-4" style="background-color: #121212;">
+    <h2 class="text-center">Skills for {{userId}}</h2>
+    <hr class="bg-white">
+    <div class="container-fluid">
+        <div class="row" style="text-align: center; vertical-align: top">
             {{#each firstRow as |cat|}}
-            <div style="text-align: center; vertical-align: top">
-                <h1 style="text-align: center;font-size: 25px;">{{cat.name}}</h1>
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead style="color: rgb(255,255,255);">
-                            <tr>
-                                <th>Skill</th>
-                                <th>Level</th>
-                            </tr>
-                        </thead>
-                        <tbody style="color: rgb(255,255,255);">
-                            {{#each cat.skills as |skill|}}
-                            <tr>
-                                <td>{{skill.name}}</td>
-                                <td>{{skill.level}}/{{skill.maxLevel}}</td>
-                            </tr>
-                            {{/each}}
-                        </tbody>
-                    </table>
-                </div>
+            <div class="col">
+                <h4 class="text-center">{{cat.name}}</h4>
+                <table class="table">
+                    <thead style="color: rgb(255,255,255);">
+                        <tr>
+                            <th>Skill</th>
+                            <th>Level</th>
+                        </tr>
+                    </thead>
+                    <tbody style="color: rgb(255,255,255);">
+                        {{#each cat.skills as |skill|}}
+                        <tr>
+                            <td>{{skill.name}}</td>
+                            <td>{{skill.level}}/{{skill.maxLevel}}</td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
             </div>
             {{/each}}
         </div>
-        <div class="col">
+        <div class="row" style="text-align: center; vertical-align: top">
             {{#each secondRow as |cat|}}
-            <div style="text-align: center; vertical-align: top">
-                <h1 style="text-align: center;font-size: 25px;">{{cat.name}}</h1>
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead style="color: rgb(255,255,255);">
-                            <tr>
-                                <th>Skill</th>
-                                <th>Level</th>
-                            </tr>
-                        </thead>
-                        <tbody style="color: rgb(255,255,255);">
-                            {{#each cat.skills as |skill|}}
-                            <tr>
-                                <td>{{skill.name}}</td>
-                                <td>{{skill.level}}/{{skill.maxLevel}}</td>
-                            </tr>
-                            {{/each}}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            {{/each}}
-        </div>
-        <div class="col">
-            {{#each thirdRow as |cat|}}
-            <div style="text-align: center; vertical-align: top">
-                <h1 style="text-align: center;font-size: 25px;">{{cat.name}}</h1>
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead style="color: rgb(255,255,255);">
-                            <tr>
-                                <th>Skill</th>
-                                <th>Level</th>
-                            </tr>
-                        </thead>
-                        <tbody style="color: rgb(255,255,255);">
-                            {{#each cat.skills as |skill|}}
-                            <tr>
-                                <td>{{skill.name}}</td>
-                                <td>{{skill.level}}/{{skill.maxLevel}}</td>
-                            </tr>
-                            {{/each}}
-                        </tbody>
-                    </table>
-                </div>
+            <div class="col">
+                <h4 class="text-center">{{cat.name}}</h4>
+                <table class="table">
+                    <thead style="color: rgb(255,255,255);">
+                        <tr>
+                            <th>Skill</th>
+                            <th>Level</th>
+                        </tr>
+                    </thead>
+                    <tbody style="color: rgb(255,255,255);">
+                        {{#each cat.skills as |skill|}}
+                        <tr>
+                            <td>{{skill.name}}</td>
+                            <td>{{skill.level}}/{{skill.maxLevel}}</td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
             </div>
             {{/each}}
         </div>
     </div>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.bundle.min.js"></script>
 </body>

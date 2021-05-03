@@ -68,7 +68,6 @@ bot.on('message', async (msg) => {
       const { data: { data: { gaptitudes_v } } } = await TT(`/data/${args[1]}`);
       const firstRow = [];
       const secondRow = [];
-      const thirdRow = [];
 
       Object.keys(gaptitudes_v).forEach((cat) => {
         let data = {
@@ -85,15 +84,12 @@ bot.on('message', async (msg) => {
           });
         });
 
-        if (firstRow.length < 3) {
+        if (firstRow.length < 5) {
           firstRow.push(data);
-        } else if (secondRow.length < 4 && firstRow.length === 3) {
+        } else  {
           secondRow.push(data);
-        } else if (thirdRow.length < 3 && firstRow.length === 3 && secondRow.length === 4) {
-          thirdRow.push(data);
         }
       });
-
 
       const img = await htmlToImage({
         html: useTemplate('skills'), 
@@ -101,7 +97,7 @@ bot.on('message', async (msg) => {
           userId: args[1],
           firstRow,
           secondRow,
-          thirdRow
+          thirdRow: []
         }
       });
       msg.channel.send(new Discord.MessageAttachment(img, `skills-${args[1]}.png`));
