@@ -10,7 +10,7 @@ bot.login(TOKEN);
 
 //Tycoon Server Selection And Key
 const TT = axios.create({
-  baseURL: 'http://server.tycoon.community:30120/status',
+  baseURL: 'http://na.tycoon.community:30120/status',
   headers: { 'X-Tycoon-Key': process.env.TYCOONTOKEN }
 });
 
@@ -66,50 +66,43 @@ bot.on('message', async (msg) => {
       msg.channel.send(new Discord.MessageAttachment(img, `inventory-${args[1]}.png`));
     } else if (args[0] === 'skills') {
       const { data: { data: { gaptitudes_v } } } = await TT(`/data/${args[1]}`);
-      let htmlData = '';
+      const firstRow = [];
+      const secondRow = [];
+      const thirdRow = [];
 
       Object.keys(gaptitudes_v).forEach((cat) => {
-        htmlData += `
-        <h3><u>${cat.charAt(0).toUpperCase() + cat.slice(1)}</u></h3>
-        <table>
-          <tr>
-            <th>Skill</th>
-            <th>Level</th>
-          </tr>
-        `;
-
+        let data = {
+          name: cat.charAt(0).toUpperCase() + cat.slice(1),
+          skills: []
+        };
 
         Object.keys(gaptitudes_v[cat]).forEach((skill) => {
           const skillLevel = Math.floor((Math.sqrt(1 + 8 * gaptitudes_v[cat][skill] / 5) - 1) / 2);
-          htmlData += `
-          <tr>
-            <td>${skill === 'skill' ? cat.charAt(0).toUpperCase() + cat.slice(1) : skill.charAt(0).toUpperCase() + skill.slice(1)}</td>
-            <td>${skillLevel}/${skill === 'strength' ? '30' : '100'}</td>
-          </tr>`;
+          data.skills.push({
+            name: skill === 'skill' ? cat.charAt(0).toUpperCase() + cat.slice(1) : skill.charAt(0).toUpperCase() + skill.slice(1),
+            level: skillLevel,
+            maxLevel: skill === 'strength' ? '30' : '100'
+          });
         });
-        htmlData += '</table>';
+
+        if (firstRow.length < 3) {
+          firstRow.push(data);
+        } else if (secondRow.length < 4 && firstRow.length === 3) {
+          secondRow.push(data);
+        } else if (thirdRow.length < 3 && firstRow.length === 3 && secondRow.length === 4) {
+          thirdRow.push(data);
+        }
       });
 
-      htmlData += `
-      <style>
-        h3 {
-          padding-left: 80px;
-          color: #EAEAEA;
+      const img = await htmlToImage({
+        html: useTemplate('skills'), 
+        content: {
+          userId: args[1],
+          firstRow,
+          secondRow,
+          thirdRow
         }
-      
-        td, th {
-          padding-left: 40px;
-          color: #ffffff;
-        }
-      
-        * {
-          font-family: Comic Sans MS;
-          background-color: #000a12;
-          max-width: 260px;
-        }
-      </style>`;
-
-      const img = await htmlToImage({ html: htmlData });
+      });
       msg.channel.send(new Discord.MessageAttachment(img, `skills-${args[1]}.png`));
     } else if (args[0] === 'server') {
       if (!args[1] || Number.isNaN(parseInt(args[1]))) return msg.reply('Please enter a number from 1-10!');
@@ -131,7 +124,7 @@ bot.on('message', async (msg) => {
             timeRemaining: serverData.server.dxp[0] ? msToTime(serverData.server.dxp[2]) : null
           }
         });
-        
+
         msg.channel.send(new Discord.MessageAttachment(img, `server-${args[1]}.png`));
       } catch (e) {
         console.log(e);
