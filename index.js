@@ -3,7 +3,7 @@ require('dotenv').config();
 const Discord = require('discord.js');
 const axios = require('axios');
 const htmlToImage = require('node-html-to-image');
-const { addCommas, createAndSendTemp, msToTime, useTemplate } = require('./utils');
+const { addCommas, createAndSendTemp, msToTime, useTemplate, processErrorCode } = require('./utils');
 const bot = new Discord.Client();
 const TOKEN = process.env.TOKEN;
 bot.login(TOKEN);
@@ -96,12 +96,12 @@ bot.on('message', async (msg) => {
           padding-left: 80px;
           color: #EAEAEA;
         }
-      
+
         td, th {
           padding-left: 40px;
           color: #ffffff;
         }
-      
+
         * {
           font-family: Comic Sans MS;
           background-color: #000a12;
@@ -131,7 +131,7 @@ bot.on('message', async (msg) => {
             timeRemaining: serverData.server.dxp[0] ? msToTime(serverData.server.dxp[2]) : null
           }
         });
-        
+
         msg.channel.send(new Discord.MessageAttachment(img, `server-${args[1]}.png`));
       } catch (e) {
         console.log(e);
@@ -192,7 +192,10 @@ bot.on('message', async (msg) => {
 
 
   } catch (err) {
-    msg.channel.send(`An error occured! ${err}`);
+    // Handling errors by returning statement to the message channel
+    msg.channel.send(processErrorCode(err.response.data.code));
+    // Can instead use the following line if you would rather not customise return values and use the Axios/Request returned message
+    //msg.channel.send(err.response.data.error);
     console.log(err);
   }
 });

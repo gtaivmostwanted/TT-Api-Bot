@@ -32,9 +32,19 @@ function addCommas(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
+function processErrorCode(code) {
+  switch (code) {
+    case "423":
+      return "This account's data is locked from public view.";
+    default:
+      return "No handler request found for code: "+code;
+  }
+}
+
 module.exports = {
   createAndSendTemp,
   useTemplate,
   msToTime,
-  addCommas
+  addCommas,
+  processErrorCode
 };
