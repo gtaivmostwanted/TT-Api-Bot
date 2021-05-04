@@ -78,16 +78,16 @@ bot.on('message', async (msg) => {
 
       // Custom chest command, exists outside of the default endpoint as arg section
     if (args[0] === 'chest') {
-      const { data: { data: { inventory } } } = await TT(`/chest${args[1]}`);
+      const { data: { data: { chest } } } = await TT(`/chest${args[1]}`);
       const items = [];
 
-      Object.keys(inventory).forEach((itemId) => {
+      Object.keys(chest).forEach((itemId) => {
         items.push({
-          name: inventory[itemId].name,
-          amount: inventory[itemId].amount,
-          weight: inventory[itemId].weight,
-          stripped: inventory[itemId].name.replace(/(<([^>]+)>)/gi, ''),
-          total: (inventory[itemId].weight * inventory[itemId].amount).toFixed(2)
+          name: chest[itemId].name,
+          amount: chest[itemId].amount,
+          weight: chest[itemId].weight,
+          stripped: chest[itemId].name.replace(/(<([^>]+)>)/gi, ''),
+          total: (chest[itemId].weight * chest[itemId].amount).toFixed(2)
         });
       });
 
