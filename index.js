@@ -75,6 +75,42 @@ bot.on('message', async (msg) => {
         }
       });
       msg.channel.send(new Discord.MessageAttachment(img, `inventory-${args[1]}.png`));
+
+      // Custom chest command, exists outside of the default endpoint as arg section
+    if (args[0] === 'chest') {
+      const { data: { data: { inventory } } } = await TT(`/chest${args[1]}`);
+      const items = [];
+
+      Object.keys(inventory).forEach((itemId) => {
+        items.push({
+          name: inventory[itemId].name,
+          amount: inventory[itemId].amount,
+          weight: inventory[itemId].weight,
+          stripped: inventory[itemId].name.replace(/(<([^>]+)>)/gi, ''),
+          total: (inventory[itemId].weight * inventory[itemId].amount).toFixed(2)
+        });
+      });
+
+      items.sort((a, b) => a.stripped.localeCompare(b.stripped));
+
+      const rows = [];
+      const rowLimit = 20;
+      
+      for (let i=0; i < items.length; i += rowLimit) {
+        rows.push(items.slice(i, i + rowLimit));
+      }
+      
+      const img = await htmlToImage({ 
+        html: useTemplate('inventory'),
+        content: {
+          rows,
+          userId: args[1],
+          totalItems: items.length
+        }
+      });
+      msg.channel.send(new Discord.MessageAttachment(img, `chest-${args[1]}.png`));
+
+   // Custom Skills command, exists outside of the default endpoint as arg section 
     } else if (args[0] === 'skills') {
       const { data: { data: { gaptitudes_v } } } = await TT(`/data/${args[1]}`);
       const skillArr = [];
