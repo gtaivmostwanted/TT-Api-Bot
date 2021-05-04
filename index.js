@@ -225,7 +225,7 @@ bot.on('message', async (msg) => {
     }
 
 
-  } catch (err) {
+   } catch (err) {
     // Handling errors by returning statement to the message channel
     msg.channel.send(processErrorCode(err.response.data.code));
     // Can instead use the following line if you would rather not customise return values and use the Axios/Request returned message
