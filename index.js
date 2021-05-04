@@ -75,45 +75,7 @@ bot.on('message', async (msg) => {
         }
       });
       msg.channel.send(new Discord.MessageAttachment(img, `inventory-${args[1]}.png`));
-<<<<<<< HEAD
-
-      // Custom chest command, exists outside of the default endpoint as arg section
-    if (args[0] === 'chest') {
-      const { data: { data: { chest } } } = await TT(`/chest${args[1]}`);
-      const items = [];
-
-      Object.keys(chest).forEach((itemId) => {
-        items.push({
-          name: chest[itemId].name,
-          amount: chest[itemId].amount,
-          weight: chest[itemId].weight,
-          stripped: chest[itemId].name.replace(/(<([^>]+)>)/gi, ''),
-          total: (chest[itemId].weight * chest[itemId].amount).toFixed(2)
-        });
-      });
-
-      items.sort((a, b) => a.stripped.localeCompare(b.stripped));
-
-      const rows = [];
-      const rowLimit = 20;
-      
-      for (let i=0; i < items.length; i += rowLimit) {
-        rows.push(items.slice(i, i + rowLimit));
-      }
-      
-      const img = await htmlToImage({ 
-        html: useTemplate('inventory'),
-        content: {
-          rows,
-          userId: args[1],
-          totalItems: items.length
-        }
-      });
-      msg.channel.send(new Discord.MessageAttachment(img, `chest-${args[1]}.png`));
-
-   // Custom Skills command, exists outside of the default endpoint as arg section 
-=======
->>>>>>> parent of b6ab596 (breaking the bot)
+      // Custom skills command
     } else if (args[0] === 'skills') {
       const { data: { data: { gaptitudes_v } } } = await TT(`/data/${args[1]}`);
       const skillArr = [];
