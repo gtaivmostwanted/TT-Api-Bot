@@ -3,7 +3,6 @@ require('dotenv').config();
 const Discord = require('discord.js');
 const axios = require('axios');
 const htmlToImage = require('node-html-to-image');
-var mongo = require('mongodb');
 const { addCommas, createAndSendTemp, msToTime, useTemplate, processErrorCode } = require('./utils');
 const bot = new Discord.Client();
 const TOKEN = process.env.TOKEN;

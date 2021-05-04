@@ -43,7 +43,7 @@ function processErrorCode(code) {
     case '404':
       return 'Invalid Api Route.';
     case '412':
-      return 'invalid VRPID entered';
+      return 'invalid vRP ID entered';
     default:
       return 'No handler request found for code: '+code;
   }
