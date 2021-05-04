@@ -75,6 +75,7 @@ bot.on('message', async (msg) => {
         }
       });
       msg.channel.send(new Discord.MessageAttachment(img, `inventory-${args[1]}.png`));
+<<<<<<< HEAD
 
       // Custom chest command, exists outside of the default endpoint as arg section
     if (args[0] === 'chest') {
@@ -111,6 +112,8 @@ bot.on('message', async (msg) => {
       msg.channel.send(new Discord.MessageAttachment(img, `chest-${args[1]}.png`));
 
    // Custom Skills command, exists outside of the default endpoint as arg section 
+=======
+>>>>>>> parent of b6ab596 (breaking the bot)
     } else if (args[0] === 'skills') {
       const { data: { data: { gaptitudes_v } } } = await TT(`/data/${args[1]}`);
       const skillArr = [];
