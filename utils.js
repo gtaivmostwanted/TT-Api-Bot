@@ -2,6 +2,20 @@ const tmp = require('tmp');
 const { join } = require('path');
 const fs = require('fs');
 const Discord = require('discord.js');
+const axios = require('axios');
+
+const servers = [
+  'http://server.tycoon.community:30120',
+  'http://server.tycoon.community:30122',
+  'http://server.tycoon.community:30123',
+  'http://server.tycoon.community:30124',
+  'http://server.tycoon.community:30125',
+  'http://na.tycoon.community:30120',
+  'http://na.tycoon.community:30122',
+  'http://na.tycoon.community:30123',
+  'http://na.tycoon.community:30124',
+  'http://na.tycoon.community:30125',
+];
 
 function createAndSendTemp(msg, data, fileName) {
   tmp.file((err, path, fd, cleanupCallback) => {
@@ -40,6 +54,8 @@ function processErrorCode(code) {
       return 'Invalid request check input and try again.';
     case '402':
       return 'No API charges remaining.';
+    case '403':
+      return 'Request has been forbidden! (Broken key?)';
     case '404':
       return 'Invalid Api Route.';
     case '412':
@@ -49,10 +65,32 @@ function processErrorCode(code) {
   }
 }
 
+async function getServer(userId = null) {
+  var activeServer = null;
+  for (const server of servers){
+    try {
+      let { data: players } = await axios.get(`${server}/status/widget/players.json`);
+      if (!players) return activeServer;
+      if (userId) {
+        for (const player of players) {
+          if (player[2] == userId) {
+            activeServer = server;
+            break;
+          };
+        };
+      }
+      else { activeServer = server; break; };
+    } catch(e) { console.log(e); continue };
+    if (activeServer) break;
+  }
+  return activeServer
+}
+
 module.exports = {
   createAndSendTemp,
   useTemplate,
   msToTime,
   addCommas,
-  processErrorCode
+  processErrorCode,
+  getServer,
 };

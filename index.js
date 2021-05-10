@@ -3,16 +3,10 @@ require('dotenv').config();
 const Discord = require('discord.js');
 const axios = require('axios');
 const htmlToImage = require('node-html-to-image');
-const { addCommas, createAndSendTemp, msToTime, useTemplate, processErrorCode } = require('./utils');
+const { addCommas, createAndSendTemp, msToTime, useTemplate, processErrorCode, getServer } = require('./utils');
 const bot = new Discord.Client();
 const TOKEN = process.env.TOKEN;
 bot.login(TOKEN);
-
-//Tycoon Server Selection And Key
-const TT = axios.create({
-  baseURL: 'http://na.tycoon.community:30120/status',
-  headers: { 'X-Tycoon-Key': process.env.TYCOONTOKEN }
-});
 
 //Bot Starting And Console Output
 bot.on('ready', () => {
@@ -21,17 +15,21 @@ bot.on('ready', () => {
 });
 
 const servers = [
-  'server.tycoon.community:30120',
-  'server.tycoon.community:30122',
-  'server.tycoon.community:30123',
-  'server.tycoon.community:30124',
-  'server.tycoon.community:30125',
-  'na.tycoon.community:30120',
-  'na.tycoon.community:30122',
-  'na.tycoon.community:30123',
-  'na.tycoon.community:30124',
-  'na.tycoon.community:30125',
+  'http://server.tycoon.community:30120',
+  'http://server.tycoon.community:30122',
+  'http://server.tycoon.community:30123',
+  'http://server.tycoon.community:30124',
+  'http://server.tycoon.community:30125',
+  'http://na.tycoon.community:30120',
+  'http://na.tycoon.community:30122',
+  'http://na.tycoon.community:30123',
+  'http://na.tycoon.community:30124',
+  'http://na.tycoon.community:30125',
 ];
+//What endpoints can take a user id?
+const userCapablePoints = [
+  'wealth'
+]
 
 bot.on('message', async (msg) => {
   const args = msg.content.toLowerCase().split(' ');
@@ -40,11 +38,24 @@ bot.on('message', async (msg) => {
 
   // Process what specific command the user has typer, will determine path & processing
   if (args.length < 1) return;
-
+  
+  const serverSelection = userCapablePoints.includes(args[0]) ? await getServer(args[0]) : await getServer();
+  
+  if (userCapablePoints.includes(args[0]) && !serverSelection) {
+    msg.channel.send(`User ${args[1]} not found`); return;
+  } 
+  else if (!serverSelection) {
+    msg.channel.send(`Could not find an active server`); return;
+  };
+  //Tycoon Server Selection And Key
+  const TT = axios.create({
+    baseURL: serverSelection,
+    headers: { 'X-Tycoon-Key': process.env.TYCOONTOKEN }
+  });
   try {
     // Custom inventory command, exists outside of the default endpoint as arg section
     if (args[0] === 'inventory') {
-      const { data: { data: { inventory } } } = await TT(`/dataadv/${args[1]}`);
+      const { data: { data: { inventory } } } = await TT(`status/dataadv/${args[1]}`);
       const items = [];
 
       Object.keys(inventory).forEach((itemId) => {
@@ -77,7 +88,7 @@ bot.on('message', async (msg) => {
       msg.channel.send(new Discord.MessageAttachment(img, `inventory-${args[1]}.png`));
       // Custom skills command
     } else if (args[0] === 'skills') {
-      const { data: { data: { gaptitudes_v } } } = await TT(`/data/${args[1]}`);
+      const { data: { data: { gaptitudes_v } } } = await TT(`/status/data/${args[1]}`);
       const skillArr = [];
 
       Object.keys(gaptitudes_v).forEach((cat) => {
@@ -124,7 +135,7 @@ bot.on('message', async (msg) => {
       const srvId = parseInt(args[1]);
 
       try {
-        const { data: serverData } = await axios(`http://${servers[srvId - 1]}/status/widget/players.json`);
+        const { data: serverData } = await axios(`${servers[srvId - 1]}/status/widget/players.json`);
         const playercount = serverData.players.length;
 
         if (serverData.players.length > 10) serverData.players.length = 10;
@@ -147,7 +158,7 @@ bot.on('message', async (msg) => {
       }
 
     } else if (args[0] === 'economy') {
-      const { data } = await TT('/economy.csv');
+      const { data } = await TT('/status/economy.csv');
       const splitEconomy = data.split('\n');
       splitEconomy.pop();
       const shortData = splitEconomy.splice(splitEconomy.length - 20);
@@ -176,7 +187,7 @@ bot.on('message', async (msg) => {
       });
       msg.channel.send(new Discord.MessageAttachment(img, 'economy.png'));
     } else {
-      const response = await TT(`/${args[0]}${args[1] ? `/${args[1]}` : ''}`);
+      const response = await TT(`/status/${args[0]}${args[1] ? `/status/${args[1]}` : ''}`);
       const data = response.data;
       if (typeof data === 'object' || Array.isArray(data)) {
         createAndSendTemp(msg, JSON.stringify(data, null, 2), (args[0].includes('.json') ? args[0] : `${args[0]}.json`));
@@ -200,5 +211,5 @@ bot.on('message', async (msg) => {
 });
 
 
-//Credits:sadboilogan"Almost complete bot Re-Write, Elfshot#0007 "Remade Inventory Command"
+//Credits:sadboilogan"Almost complete bot Re-Write, Elfshot#0007 "something"
 // Edit Number to force restart Bot:2
