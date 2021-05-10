@@ -39,7 +39,7 @@ bot.on('message', async (msg) => {
   // Process what specific command the user has typer, will determine path & processing
   if (args.length < 1) return;
   
-  const serverSelection = userCapablePoints.includes(args[0]) ? await getServer(args[0]) : await getServer();
+  const serverSelection = userCapablePoints.includes(args[0]) ? await getServer(args[1]) : await getServer();
   
   if (userCapablePoints.includes(args[0]) && !serverSelection) {
     msg.channel.send(`User ${args[1]} not found`); return;
@@ -218,7 +218,15 @@ bot.on('message', async (msg) => {
         });
         msg.channel.send(new Discord.MessageAttachment(img, `napsack-${args[1]}.png`));
   
-    } else {
+    } else if (args[0] === 'wealth') {
+      const { data } = await TT(`/status/wealth/${args[1]}`);
+      let embed = new Discord.MessageEmbed()
+        embed.setColor('#800080')
+        embed.setTitle(`Wealth of ${args[1]}`)
+        embed.setDescription(`Wallet: ${data.wallet}\nBank: ${data.bank}`)
+      msg.channel.send(embed);
+    }
+    else {
       const response = await TT(`/status/${args[0]}${args[1] ? `/status/${args[1]}` : ''}`);
       const data = response.data;
       if (typeof data === 'object' || Array.isArray(data)) {
@@ -243,5 +251,5 @@ bot.on('message', async (msg) => {
 });
 
 
-//Credits:sadboilogan"Almost complete bot Re-Write, Elfshot#0007 "something"
+//Credits:sadboilogan"Almost complete bot Re-Write, Elfshot#0007 "shtuff"
 // Edit Number to force restart Bot:2

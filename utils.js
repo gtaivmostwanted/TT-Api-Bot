@@ -69,7 +69,7 @@ async function getServer(userId = null) {
   var activeServer = null;
   for (const server of servers){
     try {
-      let { data: players } = await axios.get(`${server}/status/widget/players.json`);
+      const { data:{ players } } = await axios.get(`${server}/status/widget/players.json`);
       if (!players) return activeServer;
       if (userId) {
         for (const player of players) {
@@ -80,7 +80,7 @@ async function getServer(userId = null) {
         };
       }
       else { activeServer = server; break; };
-    } catch(e) { console.log(e); continue };
+    } catch(e) { continue };
     if (activeServer) break;
   }
   return activeServer
