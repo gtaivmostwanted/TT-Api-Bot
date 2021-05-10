@@ -55,7 +55,7 @@ bot.on('message', async (msg) => {
   try {
     // Custom inventory command, exists outside of the default endpoint as arg section
     if (args[0] === 'inventory') {
-      const { data: { data: { inventory } } } = await TT(`status/dataadv/${args[1]}`);
+      const { data: { data: { inventory } } } = await TT(`/status/dataadv/${args[1]}`);
       const items = [];
 
       Object.keys(inventory).forEach((itemId) => {
@@ -186,6 +186,38 @@ bot.on('message', async (msg) => {
         }
       });
       msg.channel.send(new Discord.MessageAttachment(img, 'economy.png'));
+    }
+      else if (args[0] === 'backpack') {
+        const { data: { data: inventory } } = await TT(`/status/chest/u${args[1]}backpack`);
+        const items = [];
+  
+        Object.keys(inventory).forEach((itemId) => {
+          items.push({
+            name: itemId,
+            amount: inventory[itemId].amount,
+            stripped: itemId.replace(/(<([^>]+)>)/gi, ''),
+          });
+        });
+  
+        items.sort((a, b) => a.stripped.localeCompare(b.stripped));
+  
+        const rows = [];
+        const rowLimit = 20;
+        
+        for (let i=0; i < items.length; i += rowLimit) {
+          rows.push(items.slice(i, i + rowLimit));
+        }
+        
+        const img = await htmlToImage({ 
+          html: useTemplate('backpack'),
+          content: {
+            rows,
+            userId: args[1],
+            totalItems: items.length
+          }
+        });
+        msg.channel.send(new Discord.MessageAttachment(img, `napsack-${args[1]}.png`));
+  
     } else {
       const response = await TT(`/status/${args[0]}${args[1] ? `/status/${args[1]}` : ''}`);
       const data = response.data;
@@ -201,7 +233,7 @@ bot.on('message', async (msg) => {
     }
 
 
-   } catch (err) {
+  } catch (err) {
     // Handling errors by returning statement to the message channel
     msg.channel.send(processErrorCode(err.response.data.code));
     // Can instead use the following line if you would rather not customise return values and use the Axios/Request returned message
