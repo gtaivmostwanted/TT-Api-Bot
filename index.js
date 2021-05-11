@@ -157,6 +157,7 @@ bot.on('message', async (msg) => {
         msg.reply('Uh oh, server seems unresponsive! ' + e);
       }
 
+      //Custom Economy Viewer
     } else if (args[0] === 'economy') {
       const { data } = await TT('/status/economy.csv');
       const splitEconomy = data.split('\n');
@@ -186,6 +187,8 @@ bot.on('message', async (msg) => {
         }
       });
       msg.channel.send(new Discord.MessageAttachment(img, 'economy.png'));
+
+      //Elfshots Custom Backpack Inventory Viewer
     }
       else if (args[0] === 'backpack') {
         const { data: { data: inventory } } = await TT(`/status/chest/u${args[1]}backpack`);
@@ -217,13 +220,31 @@ bot.on('message', async (msg) => {
           }
         });
         msg.channel.send(new Discord.MessageAttachment(img, `napsack-${args[1]}.png`));
-  
+     
+        
+        //custom wealth command "SOTD Embed"
+    } else if (args[0] === 'sotd') {
+      const { data } = await TT(`/status/skillrotation.json`);
+      let embed = new Discord.MessageEmbed()
+        embed.setColor('#5B00C9')
+        embed.setTitle(`Current Skill of the Day`)
+        embed.setDescription(`Bonus%: ${data.bonus}\nSkill: ${data.skill}`)
+      msg.channel.send(embed);
+      //custom wealth command "generates wealth embed"
     } else if (args[0] === 'wealth') {
       const { data } = await TT(`/status/wealth/${args[1]}`);
       let embed = new Discord.MessageEmbed()
-        embed.setColor('#800080')
+        embed.setColor('#5B00C9')
         embed.setTitle(`Wealth of ${args[1]}`)
         embed.setDescription(`Wallet: ${data.wallet}\nBank: ${data.bank}`)
+      msg.channel.send(embed);
+      //custom charges command "generates charges embed"
+    } else if (args[0] === 'charges') {
+      const { data } = await TT(`/status/charges.json`);
+      let embed = new Discord.MessageEmbed()
+        embed.setColor('#5B00C9')
+        embed.setTitle(`API Charges`)
+        embed.setDescription(`Charges Remaining: ${data}`)
       msg.channel.send(embed);
     }
     else {
