@@ -236,7 +236,7 @@ bot.on('message', async (msg) => {
       let embed = new Discord.MessageEmbed()
         embed.setColor('#5B00C9')
         embed.setTitle(`Wealth of ${args[1]}`)
-        embed.setDescription(`Wallet: ${data.wallet}\nBank: ${data.bank}`)
+        embed.setDescription(`Wallet: ${addCommas(data.wallet)}\nBank: ${addCommas(data.bank)}`)
       msg.channel.send(embed);
       //custom charges command "generates charges embed"
     } else if (args[0] === 'charges') {
@@ -244,7 +244,7 @@ bot.on('message', async (msg) => {
       let embed = new Discord.MessageEmbed()
         embed.setColor('#5B00C9')
         embed.setTitle(`API Charges`)
-        embed.setDescription(`Charges Remaining: ${data}`)
+        embed.setDescription(`Charges Remaining: ${addCommas(data)}`)
       msg.channel.send(embed);
     }
     else {
