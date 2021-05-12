@@ -248,7 +248,7 @@ bot.on('message', async (msg) => {
       msg.channel.send(embed);
     }
     else {
-      const response = await TT(`/status/${args[0]}${args[1] ? `/status/${args[1]}` : ''}`);
+      const response = await TT('/status/' + `${args[0]}${args[1] ? `/${args[1]}` : ''}`);
       const data = response.data;
       if (typeof data === 'object' || Array.isArray(data)) {
         createAndSendTemp(msg, JSON.stringify(data, null, 2), (args[0].includes('.json') ? args[0] : `${args[0]}.json`));
