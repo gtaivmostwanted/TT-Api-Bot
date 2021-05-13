@@ -130,6 +130,8 @@ bot.on('message', async (msg) => {
         }
       });
       msg.channel.send(new Discord.MessageAttachment(img, `skills-${args[1]}.png`));
+    
+    //Logans Custom Server List
     } else if (args[0] === 'server') {
       if (!args[1] || Number.isNaN(parseInt(args[1]))) return msg.reply('Please enter a number from 1-10!');
       const srvId = parseInt(args[1]);
