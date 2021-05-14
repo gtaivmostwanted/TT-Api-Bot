@@ -86,6 +86,22 @@ async function getServer(userId = null) {
   return activeServer
 }
 
+async function sotdGen() {
+  try {
+    const { data } = await axios.get(`${await getServer()}/status/skillrotation.json`, {
+      headers: { 'X-Tycoon-Key': process.env.TYCOONTOKEN }, timeout: 5000});
+    const date = new Date();
+    let embed = new Discord.MessageEmbed()
+      embed.setColor('#5B00C9')
+      embed.setTitle(`Skill of the Day - ${date.getUTCDate()}/${date.getUTCMonth()}/${date.getUTCFullYear()}`)
+      embed.setDescription(`Skill: ${data.skill}\nBonus: ${data.bonus}%`)
+    return embed;
+  } catch(err) {
+    console.log(err);
+    return err;
+  }
+}
+
 module.exports = {
   createAndSendTemp,
   useTemplate,
@@ -93,4 +109,5 @@ module.exports = {
   addCommas,
   processErrorCode,
   getServer,
+  sotdGen,
 };
