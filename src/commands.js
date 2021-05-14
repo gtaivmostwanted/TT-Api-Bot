@@ -256,32 +256,111 @@ async function commands(msg) {
         embed.setTitle(`API Charges`)
         embed.setDescription(`Charges Remaining: ${addCommas(data)}`)
         msg.channel.send(embed);
-    }
-    else {
-        const response = await TT('/status/' + `${args[0]}${args[1] ? `/${args[1]}` : ''}`);
-        const data = response.data;
-        if (typeof data === 'object' || Array.isArray(data)) {
-        createAndSendTemp(msg, JSON.stringify(data, null, 2), (args[0].includes('.json') ? args[0] : `${args[0]}.json`));
-
-
-        } else if (/<\/?[a-z][\s\S]*>/i.test(data)) {
-        const img = await htmlToImage({ html: data });
-        msg.channel.send(new Discord.MessageAttachment(img, `${args[1]}.png`));
-
-        }
-    }
-
-
-    } catch (err) {
-    // Handling errors by returning statement to the message channel
-    msg.channel.send(processErrorCode(err.response.data.code));
-    // Can instead use the following line if you would rather not customise return values and use the Axios/Request returned message
-    //msg.channel.send(err.response.data.error);
-    console.log(err);
-    }
-};
-
-module.exports = {
-    commands,
-    sotdTimer,
-}
+             //custom Alive command "alive embed" 
+            } else if (args[0] === 'alive') {
+                if (!args[1] || Number.isNaN(parseInt(args[1]))) return msg.reply('Please enter a number from 1-10!');
+              const srvId = parseInt(args[1]);
+              try {
+                const { data } = await TT(`${servers[srvId - 1]}/status/alive`);
+                let embed = new Discord.MessageEmbed()
+                 embed.setColor('05f415')
+                 embed.setTitle(`Status`)
+                 embed.setDescription(`${addCommas(data.description)}`)
+                 msg.channel.send(embed);
+               } catch (e) {
+                  console.log(e);
+                  let embed = new Discord.MessageEmbed()
+                 embed.setColor('fb0303')
+                 embed.setTitle(`Status`)
+                 embed.setDescription(`${(e)}`)
+                 msg.channel.send(embed);
+               }
+                  //custom charges command "Commands embed"
+                } else if (args[0] === 'commands') {
+                  try {
+                    const commandsembed = {
+                      color: 750250,
+                      author: {
+                        name: 'Tycoon Stats',
+                        url: 'http://discord.gg/3p2pQSxZRW',
+                      },
+                      description: 'Avalible Commands',
+                      thumbnail: {
+                        url: 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png',
+                      },
+                      fields: [
+                        {
+                          name: 'Server 1~10',
+                          value: 'shows users in the selected server',
+                          inline: false,
+                        },
+                        {
+                          name: 'Economy',
+                          value: 'brings up a custom display of the economy over the past few hours',
+                          inline: false,
+                        },
+                        {
+                          name: 'Charges',
+                          value: 'shows remaining api charges on the bot',
+                          inline: false,
+                        },
+                        {
+                          name: 'Wealth',
+                          value: 'shows the wealth of a player if they are online',
+                          inline: false,
+                        },
+                        {
+                          name: 'Inventory',
+                          value: 'shows the selected players inventory',
+                          inline: false,
+                        },
+                        {
+                          name: 'Backpack',
+                          value: 'shows the inventory of selected players backpack',
+                          inline: false,
+                        },
+                        {
+                          name: 'Skills',
+                          value: 'returns selected users skills',
+                          inline: false,
+                        },
+                        {
+                          name: 'SOTD',
+                          value: 'shows current skill of the day allong with its bonus %',
+                          inline: false,
+                        },
+                        {
+                          name: 'Alive 1~10',
+                          value: 'shows if the selected server is online',
+                          inline: false,
+                        },
+                      ],
+                    };
+                    
+                    msg.channel.send({ embed: commandsembed });
+                 } catch (e) {
+                    console.log(e);
+                    msg.channel.send('...' + e);
+                 }
+                 
+            // Generic .json response shit
+            } else {
+            const response = await TT('/status/' + `${args[0]}${args[1] ? `/${args[1]}` : ''}`);
+            const data = response.data;
+            if (typeof data === 'object' || Array.isArray(data)) {
+              createAndSendTemp(msg, JSON.stringify(data, null, 2), (args[0].includes('.json') ? args[0] : `${args[0]}.json`))
+            }
+          };
+          } catch (err) {
+          // Handling errors by returning statement to the message channel
+          msg.channel.send(processErrorCode(err.response.data.code));
+          // Can instead use the following line if you would rather not customise return values and use the Axios/Request returned message
+          //msg.channel.send(err.response.data.error);
+          console.log(err);
+          }
+      };
+      
+      module.exports = {
+          commands,
+          sotdTimer,
+      }
