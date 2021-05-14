@@ -255,8 +255,33 @@ async function commands(msg) {
         embed.setColor('#5B00C9')
         embed.setTitle(`API Charges`)
         embed.setDescription(`Charges Remaining: ${addCommas(data)}`)
-        msg.channel.send(embed);
-    }
+        msg.channel.send(embed);  
+      //custom charges command "generates Forecast embed" 
+    } else if (args[0] === 'forecast') {
+        if (!args[1] || Number.isNaN(parseInt(args[1]))) return msg.reply('Please enter a number from 1-10!');
+        const srvId = parseInt(args[1]);
+        try {
+          const { data } = await TT(`${servers[srvId - 1]}/status/forecast.json`);
+          let embed = new Discord.MessageEmbed()
+          embed.setColor('#5B00C9')
+          embed.setTitle(`Weather Forecast For Server${servers[srvId - 1]}`)
+          embed.setDescription(`Weather Forecast: ${addCommas(data)}`)
+          msg.channel.send(embed);
+        } catch (e) {
+          console.log(e);
+          msg.reply('Uh oh, server seems unresponsive! ' + e);
+        }
+          //custom charges command "generates Weather embed" 
+      } else if (args[0] === 'weather') {
+        if (!args[1] || Number.isNaN(parseInt(args[1]))) return msg.reply('Please enter a number from 1-10!');
+        const srvId = parseInt(args[1]);
+        try {
+          const { data } = await TT(`${servers[srvId - 1]}/status/weather.json`);
+        } catch (e) {
+          console.log(e);
+          msg.reply('Uh oh, server seems unresponsive! ' + e);
+        }
+  
     else {
         const response = await TT('/status/' + `${args[0]}${args[1] ? `/${args[1]}` : ''}`);
         const data = response.data;
