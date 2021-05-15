@@ -257,22 +257,6 @@ async function commands(msg) {
         embed.setDescription(`Charges Remaining: ${addCommas(data)}`)
         msg.channel.send(embed);
     }
-    else if (process.env.USERLINK && args[0] === 'whois') {
-        // node has a fucking hissy fit with large ints
-        console.log(args);
-        if (typeof(parseInt(args[1])) != 'number' || isNaN(parseInt(args[1]))) { msg.channel.send('Give number!'); return; }
-        const BASE_URL = process.env.USERLINK;
-        
-        const { data: { data } } = await axios.get(BASE_URL + (parseInt(args[1]) < 1000000 ? `vrpid=${args[1]}` : `discordid=${args[1]}` ))
-        console.log(data); 
-        if (data.error) msg.channel.send(json.stringify(data.error));
-        let embed = new Discord.MessageEmbed()
-            embed.setColor('#5B00C9')
-            embed.setTitle(`Who Is "${args[1]}?"`)
-            embed.setDescription(`**Name**: ${data.userName}\n**ID**: ${data.vrpId}\n**Discord**: <@${data.discordId}>`)
-        msg.channel.send(embed);
-    }
-
     else {
         const response = await TT('/status/' + `${args[0]}${args[1] ? `/${args[1]}` : ''}`);
         const data = response.data;
