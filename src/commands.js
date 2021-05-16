@@ -264,7 +264,7 @@ async function commands(msg) {
             const BASE_URL = process.env.USERLINK;
             
             var { data } = await axios.get(BASE_URL + (parseInt(args[1]) < 1000000 ? `vrpid=${args[1]}` : `discordid=${args[1]}` ))
-            if (data.error || data.data.error) msg.channel.send(json.stringify(data.error ? data.error : data.data.error));
+            if (data.error) msg.channel.send(json.stringify(data.error));
             data = data.data
             let embed = new Discord.MessageEmbed()
                 embed.setColor('#5B00C9')
@@ -272,8 +272,8 @@ async function commands(msg) {
                 embed.setDescription(`**Name**: ${data.userName}\n**ID**: ${data.vrpId}\n**Discord**: <@${data.discordId}>`)
             msg.channel.send(embed);
         } catch(err) {
-            console.log(err)
-            msg.channel.send(data? data : err);
+            console.log(data? data : err)
+            msg.channel.send(err);
         }
     } else if (args[0] === 'alive') {
         if (!args[1] || Number.isNaN(parseInt(args[1]))) return msg.reply('Please enter a number from 1-10!');
