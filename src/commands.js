@@ -263,9 +263,8 @@ async function commands(msg) {
             if (typeof(parseInt(args[1])) != 'number' || isNaN(parseInt(args[1]))) { msg.channel.send('Give number!'); return; }
             const BASE_URL = process.env.USERLINK;
             
-            var { data } = await axios.get(BASE_URL + (parseInt(args[1]) < 1000000 ? `vrpid=${args[1]}` : `discordid=${args[1]}` ))
-            if (data.error) msg.channel.send(json.stringify(data.error));
-            data = data.data
+            var { data: { data } } = await axios.get(BASE_URL + (parseInt(args[1]) < 1000000 ? `vrpid=${args[1]}` : `discordid=${args[1]}` )) 
+            if (data.error) { msg.channel.send(data.error); return; }
             let embed = new Discord.MessageEmbed()
                 embed.setColor('#5B00C9')
                 embed.setTitle(`Who Is "${args[1]}?"`)
