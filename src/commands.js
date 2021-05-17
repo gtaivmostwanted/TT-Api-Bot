@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { addCommas, createAndSendTemp, msToTime, useTemplate, processErrorCode, getServer, sotdGen } = require('./utils');
+const { addCommas, createAndSendTemp, msToTime, useTemplate, processErrorCode, getServer, sotdGen, getUser } = require('./utils');
 const htmlToImage = require('node-html-to-image');
 const Discord = require('discord.js');
 const axios = require('axios');
@@ -259,19 +259,15 @@ async function commands(msg) {
         //custom Alive command "alive embed" 
     } else if (process.env.USERLINK && args[0] === 'whois') {
         try {
-            // node has a fucking hissy fit with large ints
-            if (typeof(parseInt(args[1])) != 'number' || isNaN(parseInt(args[1]))) { msg.channel.send('Give number!'); return; }
-            const BASE_URL = process.env.USERLINK;
-            
-            var { data: { data } } = await axios.get(BASE_URL + (parseInt(args[1]) < 1000000 ? `vrpid=${args[1]}` : `discordid=${args[1]}` )) 
-            if (data.error) { msg.channel.send(data.error); return; }
+            const data = await getUser(msg, args);
+            if (!data) return;
             let embed = new Discord.MessageEmbed()
                 embed.setColor('#5B00C9')
                 embed.setTitle(`Who Is "${args[1]}?"`)
                 embed.setDescription(`**Name**: ${data.userName}\n**ID**: ${data.vrpId}\n**Discord**: <@${data.discordId}>`)
             msg.channel.send(embed);
         } catch(err) {
-            console.log(data? data : err)
+            console.log(err);
             msg.channel.send(err);
         }
     } else if (args[0] === 'alive') {
