@@ -205,90 +205,98 @@ async function commands(msg) {
 
         //Elfshots Custom Backpack Inventory Viewer
     }
-        else if (args[0] === 'backpack') {
-        const { data: { data: inventory } } = await TT(`/status/chest/u${args[1]}backpack`);
-        const items = [];
+    else if (args[0] === 'backpack') {
+    const { data: { data: inventory } } = await TT(`/status/chest/u${args[1]}backpack`);
+    const items = [];
 
-        Object.keys(inventory).forEach((itemId) => {
-            items.push({
-            name: itemId,
-            amount: inventory[itemId].amount,
-            stripped: itemId.replace(/(<([^>]+)>)/gi, ''),
-            });
+    Object.keys(inventory).forEach((itemId) => {
+        items.push({
+        name: itemId,
+        amount: inventory[itemId].amount,
+        stripped: itemId.replace(/(<([^>]+)>)/gi, ''),
         });
+    });
 
-        items.sort((a, b) => a.stripped.localeCompare(b.stripped));
+    items.sort((a, b) => a.stripped.localeCompare(b.stripped));
 
-        const rows = [];
-        const rowLimit = 20;
-        
-        for (let i=0; i < items.length; i += rowLimit) {
-            rows.push(items.slice(i, i + rowLimit));
-        }
-        
-        const img = await htmlToImage({ 
-            html: useTemplate('backpack'),
-            content: {
-            rows,
-            userId: args[1],
-            totalItems: items.length
-            }
-        });
-        msg.channel.send(new Discord.MessageAttachment(img, `napsack-${args[1]}.png`));
+    const rows = [];
+    const rowLimit = 20;
     
-        
-        //custom wealth command "SOTD Embed"
-    } else if (args[0] === 'sotd') {
-        msg.channel.send(await sotdGen());
-        //custom wealth command "generates wealth embed"
-    } else if (args[0] === 'wealth') {
+    for (let i=0; i < items.length; i += rowLimit) {
+        rows.push(items.slice(i, i + rowLimit));
+    }
+    
+    const img = await htmlToImage({ 
+        html: useTemplate('backpack'),
+        content: {
+        rows,
+        userId: args[1],
+        totalItems: items.length
+        }
+    });
+    msg.channel.send(new Discord.MessageAttachment(img, `napsack-${args[1]}.png`));
+
+    
+    //custom command "SOTD"
+} else if (args[0] === 'sotd') {
+    msg.channel.send(await sotdGen());
+    //custom embed "Wealth"
+} else if (args[0] === 'wealth') {
+    try {
+        const dbdata = await getUser(msg, args);
         const { data } = await TT(`/status/wealth/${args[1]}`);
+        if (!data) return;
+    let embed = new Discord.MessageEmbed()
+    embed.setColor('#5B00C9')
+    embed.setTitle(`Wealth of ${dbdata.userName}`)
+    embed.setDescription(`Wallet: $${addCommas(data.wallet)}\nBank: $${addCommas(data.bank)}`)
+    msg.channel.send(embed);
+    } catch(err) {
+    console.log(err);
+    msg.channel.send(err);
+    }
+    //custom embed "charges"
+} else if (args[0] === 'charges') {
+    const { data } = await TT(`/status/charges.json`);
+    let embed = new Discord.MessageEmbed()
+    embed.setColor('#5B00C9')
+    embed.setTitle(`API Charges`)
+    embed.setDescription(`Charges Remaining: ${addCommas(data)}`)
+    msg.channel.send(embed);
+    //Custom Whois Command using Elfshots DB
+} else if (process.env.USERLINK && args[0] === 'whois') {
+    try {
+        const data = await getUser(msg, args);
+        if (!data) return;
         let embed = new Discord.MessageEmbed()
-        embed.setColor('#5B00C9')
-        embed.setTitle(`Wealth of ${args[1]}`)
-        embed.setDescription(`Wallet: $${addCommas(data.wallet)}\nBank: $${addCommas(data.bank)}`)
+            embed.setColor('#5B00C9')
+            embed.setTitle(`Who Is "${args[1]}?"`)
+            embed.setDescription(`**Name**: ${data.userName}\n**ID**: ${data.vrpId}\n**Discord**: <@${data.discordId}>`)
         msg.channel.send(embed);
-        //custom charges command "generates charges embed"
-    } else if (args[0] === 'charges') {
-        const { data } = await TT(`/status/charges.json`);
-        let embed = new Discord.MessageEmbed()
-        embed.setColor('#5B00C9')
-        embed.setTitle(`API Charges`)
-        embed.setDescription(`Charges Remaining: ${addCommas(data)}`)
+    } catch(err) {
+        console.log(err);
+        msg.channel.send(err);
+    }
+    //custom embed "Alive" 
+} else if (args[0] === 'alive') {
+    if (!args[1] || Number.isNaN(parseInt(args[1]))) return msg.reply('Please enter a number from 1-10!');
+    const srvId = parseInt(args[1]);
+    try {
+    const { data } = await TT(`${servers[srvId - 1]}/status/alive`);
+    let embed = new Discord.MessageEmbed()
+        embed.setColor('05f415')
+        embed.setTitle(`Status`)
+        embed.setDescription(`${addCommas(data.description)}`)
         msg.channel.send(embed);
-        //custom Alive command "alive embed" 
-    } else if (process.env.USERLINK && args[0] === 'whois') {
-        try {
-            const data = await getUser(msg, args);
-            if (!data) return;
-            let embed = new Discord.MessageEmbed()
-                embed.setColor('#5B00C9')
-                embed.setTitle(`Who Is "${args[1]}?"`)
-                embed.setDescription(`**Name**: ${data.userName}\n**ID**: ${data.vrpId}\n**Discord**: <@${data.discordId}>`)
-            msg.channel.send(embed);
-        } catch(err) {
-            console.log(err);
-            msg.channel.send(err);
-        }
-    } else if (args[0] === 'alive') {
-        if (!args[1] || Number.isNaN(parseInt(args[1]))) return msg.reply('Please enter a number from 1-10!');
-        const srvId = parseInt(args[1]);
-        try {
-        const { data } = await TT(`${servers[srvId - 1]}/status/alive`);
+    } catch (e) {
+        console.log(e);
         let embed = new Discord.MessageEmbed()
-            embed.setColor('05f415')
-            embed.setTitle(`Status`)
-            embed.setDescription(`${addCommas(data.description)}`)
-            msg.channel.send(embed);
-        } catch (e) {
-            console.log(e);
-            let embed = new Discord.MessageEmbed()
-            embed.setColor('fb0303')
-            embed.setTitle(`Status`)
-            embed.setDescription(`${(e)}`)
-            msg.channel.send(embed);
-        }
-            //custom charges command "Commands embed"
+        embed.setColor('fb0303')
+        embed.setTitle(`Status`)
+        embed.setDescription(`${(e)}`)
+        msg.channel.send(embed);
+    }   
+    //custom embed "Commands"
         } else if (args[0] === 'commands') {
             try {
             const commandsembed = {
