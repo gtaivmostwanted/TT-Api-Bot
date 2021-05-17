@@ -3,7 +3,7 @@ const { addCommas, createAndSendTemp, msToTime, useTemplate, processErrorCode, g
 const htmlToImage = require('node-html-to-image');
 const Discord = require('discord.js');
 const axios = require('axios');
-const bot = [];
+//const bot = [];
 var lastSOTD;
 
 function sotdTimer(botArg) {
@@ -43,7 +43,7 @@ const servers = [
     'wealth'
   ]
 
-async function commands(msg) {
+async function commands(msg, bot) {
     const args = msg.content.toLowerCase().split(' ');
     const prefix = args.shift();
     if (prefix !== '-tt') return;
@@ -264,19 +264,39 @@ async function commands(msg) {
         embed.setDescription(`Charges Remaining: ${addCommas(data)}`)
         msg.channel.send(embed);
     //Custom Whois Command using Elfshots DB
-    } else if (process.env.USERLINK && args[0] === 'whois') {
-        try {
-            const data = await getUser(msg, args);
-            if (!data) return;
-            let embed = new Discord.MessageEmbed()
-                embed.setColor('#5B00C9')
-                embed.setTitle(`Who Is "${args[1]}?"`)
-                embed.setDescription(`**Name**: ${data.userName}\n**ID**: ${data.vrpId}\n**Discord**: ${data.discordId}`)
+    } else if (args[0] === 'whois') {
+    //async function userProfile(msg, inputTaken, userId, discordId, userName) {
+        try{
+            const data = await getUser(msg, args); 
+            const inputTaken = data.inputTaken;
+            const userId = data.vrpId;
+            const userName = data.userName;
+            var discordId = data.discordId;
+            var discordAv;
+
+            if (discordId != 'Not found') {
+                await bot.users.fetch(discordId).then(myUser => {
+                discordAv = myUser.avatarURL({format: 'png', dynamic: true, size: 128});
+                });
+                discordId = `<@${discordId}>`;
+            }
+
+            var embed = new Discord.MessageEmbed()
+            embed.setTitle(`Profile of "${inputTaken}"`)
+            //embed.setDescription('Something here')
+            embed.addField('Name:', userName, true)
+            embed.addField('In-game ID:', userId, true)
+            //embed.addField('Last found:', lastFound) - will be added at a later date
+            embed.addField('Discord:', discordId, false)
+            if (discordAv) embed.setImage(discordAv)
+            embed.setAuthor('TT-Api-Bot', 'https://github.com/fluidicon.png',
+                'https://github.com/gtaivmostwanted/TT-Api-Bot')
+            embed.setColor('RANDOM');
+            
             msg.channel.send(embed);
-        } catch(err) {
-            console.log(err);
-            msg.channel.send(err);
-        }
+        } catch(e) {console.log(e); msg.channel.send("Error!")}
+          //}
+
     //custom embed "Alive" 
     } else if (args[0] === 'alive') {
         if (!args[1] || Number.isNaN(parseInt(args[1]))) return msg.reply('Please enter a number from 1-10!');

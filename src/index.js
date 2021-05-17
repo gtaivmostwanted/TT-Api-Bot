@@ -1,7 +1,7 @@
 //Requirements
 require('dotenv').config();
 const Discord = require('discord.js');
-const { commands, sotdTimer } = require('./commands')
+const { commands } = require('./commands');
 const bot = new Discord.Client();
 const TOKEN = process.env.TOKEN;
 bot.login(TOKEN);
@@ -14,7 +14,7 @@ bot.on('ready', () => {
 });
 
 bot.on('message', async (msg) => {
-  commands(msg);
+  commands(msg, bot);
 });
 
 
