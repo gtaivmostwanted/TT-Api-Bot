@@ -40,21 +40,22 @@ const servers = [
   ];
   //What endpoints can take a user id?
   const userCapablePoints = [
-    'wealth'
+    'wealth',
   ]
 
 async function commands(msg, bot) {
-    const args = msg.content.toLowerCase().split(' ');
+    var args = msg.content.toLowerCase().split(' ');
     const prefix = args.shift();
     if (prefix !== '-tt') return;
 
     // Process what specific command the user has typer, will determine path & processing
     if (args.length < 1) return;
 
+    if (userCapablePoints.includes(args[0]) && !args[1]) args[1] = msg.author.id;
     const serverSelection = userCapablePoints.includes(args[0]) ? await getServer(args[1]) : await getServer();
 
     if (userCapablePoints.includes(args[0]) && !serverSelection) {
-    msg.channel.send(`User ${args[1]} not found`); return;
+    msg.channel.send(`User not found`); return;
     } 
     else if (!serverSelection) {
     msg.channel.send(`Could not find an active server`); return;
@@ -235,25 +236,27 @@ async function commands(msg, bot) {
         }
     });
     msg.channel.send(new Discord.MessageAttachment(img, `napsack-${args[1]}.png`));
-
     
     //custom command "SOTD"
     } else if (args[0] === 'sotd') {
         msg.channel.send(await sotdGen());
-    //custom embed "Wealth"
+    
+        //custom embed "Wealth"
     } else if (args[0] === 'wealth') {
         try {
-            const dbdata = await getUser(msg, args);
-            const { data } = await TT(`/status/wealth/${args[1]}`);
+            const dbdata = await getUser(args);
+            if (!dbdata.vrpId && parseInt(args[1]) > 1000000) msg.channel.send("User not found");
+            const { data } = await TT(`/status/wealth/${dbdata.vrpId ? dbdata.vrpId : args[1] }`);
+            console.log(data)
             if (!data) return;
-        let embed = new Discord.MessageEmbed()
-        embed.setColor('#5B00C9')
-        embed.setTitle(`Wealth of ${dbdata.userName}`)
-        embed.setDescription(`Wallet: $${addCommas(data.wallet)}\nBank: $${addCommas(data.bank)}`)
-        msg.channel.send(embed);
+            let embed = new Discord.MessageEmbed()
+            embed.setColor('#5B00C9')
+            embed.setTitle(`Wealth of ${dbdata.userName}`)
+            embed.setDescription(`Wallet: $${addCommas(data.wallet)}\nBank: $${addCommas(data.bank)}`)
+            msg.channel.send(embed);
         } catch(err) {
-        console.log(err);
-        msg.channel.send(err);
+            console.log(err);
+            msg.channel.send(err);
         }
     //custom embed "charges"
     } else if (args[0] === 'charges') {
@@ -267,7 +270,7 @@ async function commands(msg, bot) {
     } else if (args[0] === 'whois') {
     //async function userProfile(msg, inputTaken, userId, discordId, userName) {
         try{
-            const data = await getUser(msg, args); 
+            const data = await getUser(args); 
             const inputTaken = data.inputTaken;
             const userId = data.vrpId;
             const userName = data.userName;
