@@ -93,8 +93,8 @@ async function sotdGen() {
     const date = new Date();
     let embed = new Discord.MessageEmbed()
       embed.setColor('#5B00C9')
-      embed.setTitle(`Skill of the Day - ${date.getUTCDate()}/${date.getUTCMonth()}/${date.getUTCFullYear()}`)
-      embed.setDescription(`Skill: ${data.skill}\nBonus: ${data.bonus}%`)
+      embed.setTitle(`Skill of the Day - \n${date.toUTCString().split(/(([0-9]{2}:*?){3} GMT)/g)[0]}`)
+      embed.setDescription(`**Skill**: ${data.skill}\n**Bonus**: ${data.bonus}%`)
     return embed;
   } catch(err) {
     console.log(err);
