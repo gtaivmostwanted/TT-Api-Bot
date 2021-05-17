@@ -238,137 +238,137 @@ async function commands(msg) {
 
     
     //custom command "SOTD"
-} else if (args[0] === 'sotd') {
-    msg.channel.send(await sotdGen());
+    } else if (args[0] === 'sotd') {
+        msg.channel.send(await sotdGen());
     //custom embed "Wealth"
-} else if (args[0] === 'wealth') {
-    try {
-        const dbdata = await getUser(msg, args);
-        const { data } = await TT(`/status/wealth/${args[1]}`);
-        if (!data) return;
-    let embed = new Discord.MessageEmbed()
-    embed.setColor('#5B00C9')
-    embed.setTitle(`Wealth of ${dbdata.userName}`)
-    embed.setDescription(`Wallet: $${addCommas(data.wallet)}\nBank: $${addCommas(data.bank)}`)
-    msg.channel.send(embed);
-    } catch(err) {
-    console.log(err);
-    msg.channel.send(err);
-    }
-    //custom embed "charges"
-} else if (args[0] === 'charges') {
-    const { data } = await TT(`/status/charges.json`);
-    let embed = new Discord.MessageEmbed()
-    embed.setColor('#5B00C9')
-    embed.setTitle(`API Charges`)
-    embed.setDescription(`Charges Remaining: ${addCommas(data)}`)
-    msg.channel.send(embed);
-    //Custom Whois Command using Elfshots DB
-} else if (process.env.USERLINK && args[0] === 'whois') {
-    try {
-        const data = await getUser(msg, args);
-        if (!data) return;
+    } else if (args[0] === 'wealth') {
+        try {
+            const dbdata = await getUser(msg, args);
+            const { data } = await TT(`/status/wealth/${args[1]}`);
+            if (!data) return;
         let embed = new Discord.MessageEmbed()
-            embed.setColor('#5B00C9')
-            embed.setTitle(`Who Is "${args[1]}?"`)
-            embed.setDescription(`**Name**: ${data.userName}\n**ID**: ${data.vrpId}\n**Discord**: <@${data.discordId}>`)
+        embed.setColor('#5B00C9')
+        embed.setTitle(`Wealth of ${dbdata.userName}`)
+        embed.setDescription(`Wallet: $${addCommas(data.wallet)}\nBank: $${addCommas(data.bank)}`)
         msg.channel.send(embed);
-    } catch(err) {
+        } catch(err) {
         console.log(err);
         msg.channel.send(err);
-    }
-    //custom embed "Alive" 
-} else if (args[0] === 'alive') {
-    if (!args[1] || Number.isNaN(parseInt(args[1]))) return msg.reply('Please enter a number from 1-10!');
-    const srvId = parseInt(args[1]);
-    try {
-    const { data } = await TT(`${servers[srvId - 1]}/status/alive`);
-    let embed = new Discord.MessageEmbed()
-        embed.setColor('05f415')
-        embed.setTitle(`Status`)
-        embed.setDescription(`${addCommas(data.description)}`)
-        msg.channel.send(embed);
-    } catch (e) {
-        console.log(e);
+        }
+    //custom embed "charges"
+    } else if (args[0] === 'charges') {
+        const { data } = await TT(`/status/charges.json`);
         let embed = new Discord.MessageEmbed()
-        embed.setColor('fb0303')
-        embed.setTitle(`Status`)
-        embed.setDescription(`${(e)}`)
+        embed.setColor('#5B00C9')
+        embed.setTitle(`API Charges`)
+        embed.setDescription(`Charges Remaining: ${addCommas(data)}`)
         msg.channel.send(embed);
-    }   
-    //custom embed "Commands"
-        } else if (args[0] === 'commands') {
-            try {
-            const commandsembed = {
-                color: 750250,
-                author: {
-                name: 'Tycoon Stats',
-                url: 'http://discord.gg/3p2pQSxZRW',
-                },
-                description: 'Available Commands',
-                thumbnail: {
-                url: 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png',
-                },
-                fields: [
-                {
-                    name: 'Server [1~10]',
-                    value: 'Show users in the selected server',
-                    inline: false,
-                },
-                {
-                    name: 'Economy',
-                    value: 'Display the economy over the past few hours',
-                    inline: false,
-                },
-                {
-                    name: 'Charges',
-                    value: 'Show the remaining API charges of the bot',
-                    inline: false,
-                },
-                {
-                    name: 'Wealth [vRp id]',
-                    value: "Show the player's wealth while they are online",
-                    inline: false,
-                },
-                {
-                    name: 'Inventory [vRp id]',
-                    value: "Show the selected player's inventory",
-                    inline: false,
-                },
-                {
-                    name: 'Backpack [vRp id]',
-                    value: "Show the contents of the selected player's backpack",
-                    inline: false,
-                },
-                {
-                    name: 'Skills [vRp id]',
-                    value: "Show the selected player's skills",
-                    inline: false,
-                },
-                {
-                    name: 'SOTD',
-                    value: 'Show current Skill of The Day with bonus percentage',
-                    inline: false,
-                },
-                {
-                    name: 'Alive [1~10]',
-                    value: 'Shows if the selected server is online',
-                    inline: false,
-                },
-                {
-                    name: 'WhoIs [vRp id or Discord id]',
-                    value: "Show the selected player's information",
-                    inline: false,
-                },
-                ],
-            };
-            
-            msg.channel.send({ embed: commandsembed });
-            } catch (e) {
+    //Custom Whois Command using Elfshots DB
+    } else if (process.env.USERLINK && args[0] === 'whois') {
+        try {
+            const data = await getUser(msg, args);
+            if (!data) return;
+            let embed = new Discord.MessageEmbed()
+                embed.setColor('#5B00C9')
+                embed.setTitle(`Who Is "${args[1]}?"`)
+                embed.setDescription(`**Name**: ${data.userName}\n**ID**: ${data.vrpId}\n**Discord**: ${data.discordId}`)
+            msg.channel.send(embed);
+        } catch(err) {
+            console.log(err);
+            msg.channel.send(err);
+        }
+    //custom embed "Alive" 
+    } else if (args[0] === 'alive') {
+        if (!args[1] || Number.isNaN(parseInt(args[1]))) return msg.reply('Please enter a number from 1-10!');
+        const srvId = parseInt(args[1]);
+        try {
+        const { data } = await TT(`${servers[srvId - 1]}/status/alive`);
+        let embed = new Discord.MessageEmbed()
+            embed.setColor('05f415')
+            embed.setTitle(`Status`)
+            embed.setDescription(`${addCommas(data.description)}`)
+            msg.channel.send(embed);
+        } catch (e) {
             console.log(e);
-            msg.channel.send('...' + e);
-            }
-            
+            let embed = new Discord.MessageEmbed()
+            embed.setColor('fb0303')
+            embed.setTitle(`Status`)
+            embed.setDescription(`${(e)}`)
+            msg.channel.send(embed);
+        }
+    //custom embed "Commands"
+    } else if (args[0] === 'commands') {
+        try {
+        const commandsembed = {
+            color: 750250,
+            author: {
+            name: 'Tycoon Stats',
+            url: 'http://discord.gg/3p2pQSxZRW',
+            },
+            description: 'Available Commands',
+            thumbnail: {
+            url: 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png',
+            },
+            fields: [
+            {
+                name: 'Server [1~10]',
+                value: 'Show users in the selected server',
+                inline: false,
+            },
+            {
+                name: 'Economy',
+                value: 'Display the economy over the past few hours',
+                inline: false,
+            },
+            {
+                name: 'Charges',
+                value: 'Show the remaining API charges of the bot',
+                inline: false,
+            },
+            {
+                name: 'Wealth [vRp id]',
+                value: "Show the player's wealth while they are online",
+                inline: false,
+            },
+            {
+                name: 'Inventory [vRp id]',
+                value: "Show the selected player's inventory",
+                inline: false,
+            },
+            {
+                name: 'Backpack [vRp id]',
+                value: "Show the contents of the selected player's backpack",
+                inline: false,
+            },
+            {
+                name: 'Skills [vRp id]',
+                value: "Show the selected player's skills",
+                inline: false,
+            },
+            {
+                name: 'SOTD',
+                value: 'Show current Skill of The Day with bonus percentage',
+                inline: false,
+            },
+            {
+                name: 'Alive [1~10]',
+                value: 'Shows if the selected server is online',
+                inline: false,
+            },
+            {
+                name: 'WhoIs [vRp id or Discord id]',
+                value: "Show the selected player's information",
+                inline: false,
+            },
+            ],
+        };
+        
+        msg.channel.send({ embed: commandsembed });
+        } catch (e) {
+        console.log(e);
+        msg.channel.send('...' + e);
+        }
+        
             // Generic .json response shit
             } else {
             const response = await TT('/status/' + `${args[0]}${args[1] ? `/${args[1]}` : ''}`);
