@@ -270,6 +270,7 @@ async function commands(msg, bot) {
     } else if (args[0] === 'whois') {
     //async function userProfile(msg, inputTaken, userId, discordId, userName) {
         try{
+            if (!args[1]) args[1] = msg.author.id;
             const data = await getUser(args); 
             const inputTaken = data.inputTaken;
             const userId = data.vrpId;
