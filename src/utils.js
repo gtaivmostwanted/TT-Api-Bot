@@ -66,7 +66,7 @@ function processErrorCode(code) {
 }
 
 async function getServer(userId = null) {
-  if (parseInt(userId > 1000000)) var userId = await getUser(['', userId]);
+  if (parseInt(userId) > 1000000) var userId = await getUser(['', userId]).vrpId;
   var activeServer = null;
   for (const server of servers){
     try {

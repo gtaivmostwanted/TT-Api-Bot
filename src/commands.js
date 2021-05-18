@@ -246,9 +246,9 @@ async function commands(msg, bot) {
     try {
         const dbdata = await getUser(args);
             if (!dbdata.vrpId && parseInt(args[1]) > 1000000) msg.channel.send("User not found");
-            const { data } = await TT(`/status/wealth/${dbdata.vrpId ? dbdata.vrpId : args[1] }`);
-            console.log(data)
+            var { data } = await TT(`/status/wealth/${dbdata.vrpId ? dbdata.vrpId : args[1] }`);
         if (!data) return;
+        if (data.code == '412') { msg.channel.send('User not online'); return; }
     let embed = new Discord.MessageEmbed()
     embed.setColor('#5B00C9')
     embed.setAuthor('TT-Api-Bot', 'https://github.com/fluidicon.png',
