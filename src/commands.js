@@ -397,7 +397,6 @@ async function commands(msg, bot) {
             },
             ],
         };
-        embed.setTimestamp()
         msg.channel.send({ embed: commandsembed });
         } catch (e) {
         console.log(e);
