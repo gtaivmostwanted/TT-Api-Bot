@@ -241,30 +241,39 @@ async function commands(msg, bot) {
     } else if (args[0] === 'sotd') {
         msg.channel.send(await sotdGen());
     
-        //custom embed "Wealth"
-    } else if (args[0] === 'wealth') {
-        try {
-            const dbdata = await getUser(args);
+  //custom embed "Wealth"
+} else if (args[0] === 'wealth') {
+    try {
+        const dbdata = await getUser(args);
             if (!dbdata.vrpId && parseInt(args[1]) > 1000000) msg.channel.send("User not found");
             const { data } = await TT(`/status/wealth/${dbdata.vrpId ? dbdata.vrpId : args[1] }`);
             console.log(data)
-            if (!data) return;
-            let embed = new Discord.MessageEmbed()
-            embed.setColor('#5B00C9')
-            embed.setTitle(`Wealth of ${dbdata.userName}`)
-            embed.setDescription(`Wallet: $${addCommas(data.wallet)}\nBank: $${addCommas(data.bank)}`)
-            msg.channel.send(embed);
-        } catch(err) {
-            console.log(err);
-            msg.channel.send(err);
-        }
+        if (!data) return;
+    let embed = new Discord.MessageEmbed()
+    embed.setColor('#5B00C9')
+    embed.setAuthor('TT-Api-Bot', 'https://github.com/fluidicon.png',
+                'https://github.com/gtaivmostwanted/TT-Api-Bot')
+    embed.setTitle(`**Wealth of** ${dbdata.userName}`)
+    embed.setDescription(`**Wallet**: $${addCommas(data.wallet)}\n**Bank**: $${addCommas(data.bank)}`)
+    if (discordAv) embed.setImage(dbdata.discordAv)
+	embed.setFooter('usernames may be outdated', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
+    embed.setTimestamp()
+    msg.channel.send(embed);
+    } catch(err) {
+    console.log(err);
+    msg.channel.send(err);
+    }
+
     //custom embed "charges"
     } else if (args[0] === 'charges') {
         const { data } = await TT(`/status/charges.json`);
         let embed = new Discord.MessageEmbed()
         embed.setColor('#5B00C9')
+        embed.setAuthor('TT-Api-Bot', 'https://github.com/fluidicon.png',
+                'https://github.com/gtaivmostwanted/TT-Api-Bot')
         embed.setTitle(`API Charges`)
-        embed.setDescription(`Charges Remaining: ${addCommas(data)}`)
+        embed.setDescription(`**Charges Remaining**: ${addCommas(data)}`)
+        embed.setTimestamp()
         msg.channel.send(embed);
     //Custom Whois Command using Elfshots DB
     } else if (args[0] === 'whois') {
@@ -296,10 +305,10 @@ async function commands(msg, bot) {
             embed.setAuthor('TT-Api-Bot', 'https://github.com/fluidicon.png',
                 'https://github.com/gtaivmostwanted/TT-Api-Bot')
             embed.setColor('RANDOM');
-            
+            embed.setTimestamp()
+	        embed.setFooter('usernames may be outdated', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
             msg.channel.send(embed);
         } catch(e) {console.log(e); msg.channel.send("Error!")}
-          //}
 
     //custom embed "Alive" 
     } else if (args[0] === 'alive') {
@@ -311,6 +320,7 @@ async function commands(msg, bot) {
             embed.setColor('05f415')
             embed.setTitle(`Status`)
             embed.setDescription(`${addCommas(data.description)}`)
+            embed.setTimestamp()
             msg.channel.send(embed);
         } catch (e) {
             console.log(e);
@@ -318,6 +328,7 @@ async function commands(msg, bot) {
             embed.setColor('fb0303')
             embed.setTitle(`Status`)
             embed.setDescription(`${(e)}`)
+            embed.setTimestamp()
             msg.channel.send(embed);
         }
     //custom embed "Commands"
@@ -386,7 +397,7 @@ async function commands(msg, bot) {
             },
             ],
         };
-        
+        embed.setTimestamp()
         msg.channel.send({ embed: commandsembed });
         } catch (e) {
         console.log(e);
