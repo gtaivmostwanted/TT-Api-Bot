@@ -242,7 +242,6 @@ const servers = [
     //custom command "SOTD"
 } else if (args[0] === 'sotd') {
     msg.channel.send(await sotdGen());
-    console.log(data);
    //custom embed "Wealth"
 } else if (args[0] === 'wealth') {
     try {
@@ -261,7 +260,6 @@ const servers = [
 	embed.setFooter('( つ ◕_◕ )つ)', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
     embed.setTimestamp()
     msg.channel.send(embed);
-    console.log(data);
     } catch(err) {
     console.log(err);
     msg.channel.send(err);
@@ -279,7 +277,6 @@ const servers = [
     embed.setFooter('( つ ◕_◕ )つ)', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
     embed.setTimestamp()
     msg.channel.send(embed);
-    console.log(data);
  //Custom Whois Command using Elfshots DB
 } else if (args[0] === 'whois') {
     //async function userProfile(msg, inputTaken, userId, discordId, userName) {
@@ -289,6 +286,8 @@ const servers = [
             const inputTaken = data.inputTaken;
             const userId = data.vrpId;
             const userName = data.userName;
+            const lastFound = new Date(data.lastFound);
+            console.log(lastFound);
             var discordId = data.discordId;
             var discordAv;
 
@@ -304,8 +303,9 @@ const servers = [
             //embed.setDescription('Something here')
             embed.addField('Name:', userName, true)
             embed.addField('In-game ID:', userId, true)
-            //embed.addField('Last found:', lastFound) - will be added at a later date
-            embed.addField('Discord:', discordId, false)
+            //embed.addField(' ‎',' ‎', false)
+            embed.addField('Discord:', discordId, true)
+            embed.addField('Last found:', lastFound.toDateString(), false)
             if (discordAv) embed.setImage(discordAv)
             embed.setAuthor('TT-Api-Bot', 'https://github.com/fluidicon.png',
                 'https://github.com/gtaivmostwanted/TT-Api-Bot')
@@ -313,7 +313,6 @@ const servers = [
             embed.setTimestamp()
 	        embed.setFooter('( つ ◕_◕ )つ)', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
             msg.channel.send(embed);
-            console.log(data);
         } catch(e) {console.log(e); msg.channel.send("Error!")}
           
     //custom embed "Alive" 
@@ -331,7 +330,6 @@ const servers = [
         embed.setFooter('( つ ◕_◕ )つ)', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
         embed.setTimestamp()
         msg.channel.send(embed);
-        console.log(data);
     } catch (e) {
         console.log(e);
         let embed = new Discord.MessageEmbed()
@@ -343,7 +341,6 @@ const servers = [
         embed.setFooter('( つ ◕_◕ )つ)', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
         embed.setTimestamp()
         msg.channel.send(embed);
-        console.log(data);
         }  
         //custom embed "Forecast" 
         } else if (args[0] === 'forecast') {
@@ -360,7 +357,6 @@ const servers = [
          embed.setTimestamp()
          embed.setFooter('**BETA SERVER ONLY COMMAND**', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
          msg.channel.send(embed);
-         console.log(data);
          } catch (e) {
          console.log(e);
          msg.reply('Uh oh, server seems unresponsive! ' + e);
@@ -380,7 +376,6 @@ const servers = [
          embed.setFooter('**BETA SERVER ONLY COMMAND**', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
          embed.setTimestamp()
          msg.channel.send(embed);
-         console.log(data);
          } catch (e) {
          console.log(e);
          msg.reply('Uh oh, server seems unresponsive! ' + e);
