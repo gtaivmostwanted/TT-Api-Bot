@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { addCommas, createAndSendTemp, msToTime, useTemplate, processErrorCode, getServer, sotdGen, getUser } = require('./utils');
+const { addCommas, createAndSendTemp, msToTime, useTemplate, processErrorCode, getServer, sotdGen, getUser, itemIdToName } = require('./utils');
 const htmlToImage = require('node-html-to-image');
 const Discord = require('discord.js');
 const axios = require('axios');
@@ -211,10 +211,12 @@ const servers = [
         const items = [];
 
         Object.keys(inventory).forEach((itemId) => {
+        let name = itemIdToName(itemId)[0];
+        if (!name) name = itemId; 
         items.push({
-        name: itemId,
-        amount: inventory[itemId].amount,
-        stripped: itemId.replace(/(<([^>]+)>)/gi, ''),
+            name: name,
+            amount: inventory[itemId].amount,
+            stripped: name.replace(/(<([^>]+)>)/gi, ''),
         });
     });
 

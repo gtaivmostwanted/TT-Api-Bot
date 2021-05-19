@@ -4,6 +4,8 @@ const fs = require('fs');
 const Discord = require('discord.js');
 const axios = require('axios');
 
+const itemsInfo = JSON.parse((fs.readFileSync(join(__dirname.split('\\src')[0], '\\itemsInfo.json')).toString()));
+
 const servers = [
   'http://server.tycoon.community:30120',
   'http://server.tycoon.community:30122',
@@ -123,6 +125,11 @@ async function getUser(args) {
   return data;
 }
 
+function itemIdToName(itemId) {
+  let returnItem = itemsInfo[itemId] ? [itemsInfo[itemId].name, itemsInfo[itemId].weight] : null
+  return returnItem;
+}
+
 module.exports = {
   createAndSendTemp,
   useTemplate,
@@ -132,4 +139,5 @@ module.exports = {
   getServer,
   sotdGen,
   getUser,
+  itemIdToName,
 };
