@@ -257,7 +257,7 @@ const servers = [
     embed.setTitle(`**Wealth of** ${dbdata.userName}`)
     embed.setDescription(`**Wallet**: $${addCommas(data.wallet)}\n**Bank**: $${addCommas(data.bank)}`)
     if (discordAv) embed.setImage(dbdata.discordAv)
-	embed.setFooter('( つ ◕_◕ )つ)', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
+	embed.setFooter('( つ ◕_◕ )つ Tycoon', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
     embed.setTimestamp()
     msg.channel.send(embed);
     } catch(err) {
@@ -274,7 +274,7 @@ const servers = [
                 'https://github.com/gtaivmostwanted/TT-Api-Bot')
     embed.setTitle(`API Charges`)
     embed.setDescription(`**Charges Remaining**: ${addCommas(data)}`)
-    embed.setFooter('( つ ◕_◕ )つ)', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
+    embed.setFooter('( つ ◕_◕ )つ Tycoon', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
     embed.setTimestamp()
     msg.channel.send(embed);
  //Custom Whois Command using Elfshots DB
@@ -311,7 +311,7 @@ const servers = [
                 'https://github.com/gtaivmostwanted/TT-Api-Bot')
             embed.setColor('RANDOM');
             embed.setTimestamp()
-	        embed.setFooter('( つ ◕_◕ )つ)', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
+	        embed.setFooter('( つ ◕_◕ )つ Tycoon', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
             msg.channel.send(embed);
         } catch(e) {console.log(e); msg.channel.send("Error!")}
           
@@ -327,7 +327,7 @@ const servers = [
         embed.setAuthor('TT-Api-Bot', 'https://github.com/fluidicon.png',
                 'https://github.com/gtaivmostwanted/TT-Api-Bot')
         embed.setDescription(`${addCommas(data.description)}`)
-        embed.setFooter('( つ ◕_◕ )つ)', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
+        embed.setFooter('( つ ◕_◕ )つ Tycoon', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
         embed.setTimestamp()
         msg.channel.send(embed);
     } catch (e) {
@@ -338,7 +338,7 @@ const servers = [
                 'https://github.com/gtaivmostwanted/TT-Api-Bot')
         embed.setTitle(`Status`)
         embed.setDescription(`${(e)}`)
-        embed.setFooter('( つ ◕_◕ )つ)', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
+        embed.setFooter('( つ ◕_◕ )つ Tycoon', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
         embed.setTimestamp()
         msg.channel.send(embed);
         }  
