@@ -43,32 +43,32 @@ const servers = [
     'wealth',
   ]
 
-async function commands(msg, bot) {
-    var args = msg.content.toLowerCase().split(' ');
-    const prefix = args.shift();
-    if (prefix !== '-tt') return;
+     async function commands(msg, bot) {
+     var args = msg.content.toLowerCase().split(' ');
+     const prefix = args.shift();
+     if (prefix !== '-tt') return;
 
-    // Process what specific command the user has typer, will determine path & processing
-    if (args.length < 1) return;
+     // Process what specific command the user has typer, will determine path & processing
+     if (args.length < 1) return;
+ 
+     if (userCapablePoints.includes(args[0]) && !args[1]) args[1] = msg.author.id;
+     const serverSelection = userCapablePoints.includes(args[0]) ? await getServer(args[1]) : await getServer();
 
-    if (userCapablePoints.includes(args[0]) && !args[1]) args[1] = msg.author.id;
-    const serverSelection = userCapablePoints.includes(args[0]) ? await getServer(args[1]) : await getServer();
-
-    if (userCapablePoints.includes(args[0]) && !serverSelection) {
-    msg.channel.send(`User not found`); return;
-    } 
-    else if (!serverSelection) {
-    msg.channel.send(`Could not find an active server`); return;
-    };
-    //Tycoon Server Selection And Key
-    const TT = axios.create({
-    baseURL: serverSelection,
-    headers: { 'X-Tycoon-Key': process.env.TYCOONTOKEN },
-    timeout: 5000,
-    });
-    try {
-    // Custom inventory command, exists outside of the default endpoint as arg section
-    if (args[0] === 'inventory') {
+     if (userCapablePoints.includes(args[0]) && !serverSelection) {
+     msg.channel.send(`User not found`); return;
+     } 
+     else if (!serverSelection) {
+     msg.channel.send(`Could not find an active server`); return;
+     };
+     //Tycoon Server Selection And Key
+     const TT = axios.create({
+     baseURL: serverSelection,
+     headers: { 'X-Tycoon-Key': process.env.TYCOONTOKEN },
+     timeout: 5000,
+     });
+     try {
+     // Custom inventory command, exists outside of the default endpoint as arg section
+     if (args[0] === 'inventory') {
         const { data: { data: { inventory } } } = await TT(`/status/dataadv/${args[1]}`);
         const items = [];
 
@@ -101,7 +101,7 @@ async function commands(msg, bot) {
         });
         msg.channel.send(new Discord.MessageAttachment(img, `inventory-${args[1]}.png`));
         // Custom skills command
-    } else if (args[0] === 'skills') {
+        } else if (args[0] === 'skills') {
         const { data: { data: { gaptitudes_v } } } = await TT(`/status/data/${args[1]}`);
         const skillArr = [];
 
@@ -145,8 +145,8 @@ async function commands(msg, bot) {
         });
         msg.channel.send(new Discord.MessageAttachment(img, `skills-${args[1]}.png`));
     
-    //Logans Custom Server List
-    } else if (args[0] === 'server') {
+        //Logans Custom Server List
+        } else if (args[0] === 'server') {
         if (!args[1] || Number.isNaN(parseInt(args[1]))) return msg.reply('Please enter a number from 1-10!');
         const srvId = parseInt(args[1]);
 
@@ -174,7 +174,7 @@ async function commands(msg, bot) {
         }
 
         //Custom Economy Viewer
-    } else if (args[0] === 'economy') {
+        } else if (args[0] === 'economy') {
         const { data } = await TT('/status/economy.csv');
         const splitEconomy = data.split('\n');
         splitEconomy.pop();
@@ -205,12 +205,12 @@ async function commands(msg, bot) {
         msg.channel.send(new Discord.MessageAttachment(img, 'economy.png'));
 
         //Elfshots Custom Backpack Inventory Viewer
-    }
-    else if (args[0] === 'backpack') {
-    const { data: { data: inventory } } = await TT(`/status/chest/u${args[1]}backpack`);
-    const items = [];
+        }
+        else if (args[0] === 'backpack') {
+        const { data: { data: inventory } } = await TT(`/status/chest/u${args[1]}backpack`);
+        const items = [];
 
-    Object.keys(inventory).forEach((itemId) => {
+        Object.keys(inventory).forEach((itemId) => {
         items.push({
         name: itemId,
         amount: inventory[itemId].amount,
@@ -236,12 +236,12 @@ async function commands(msg, bot) {
         }
     });
     msg.channel.send(new Discord.MessageAttachment(img, `napsack-${args[1]}.png`));
-    
+
     //custom command "SOTD"
-    } else if (args[0] === 'sotd') {
-        msg.channel.send(await sotdGen());
-    
-  //custom embed "Wealth"
+} else if (args[0] === 'sotd') {
+    msg.channel.send(await sotdGen());
+    console.log(data);
+   //custom embed "Wealth"
 } else if (args[0] === 'wealth') {
     try {
         const dbdata = await getUser(args);
@@ -256,31 +256,34 @@ async function commands(msg, bot) {
     embed.setTitle(`**Wealth of** ${dbdata.userName}`)
     embed.setDescription(`**Wallet**: $${addCommas(data.wallet)}\n**Bank**: $${addCommas(data.bank)}`)
     if (discordAv) embed.setImage(dbdata.discordAv)
-	embed.setFooter('usernames may be outdated', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
+	embed.setFooter('( つ ◕_◕ )つ)', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
     embed.setTimestamp()
     msg.channel.send(embed);
+    console.log(data);
     } catch(err) {
     console.log(err);
     msg.channel.send(err);
     }
-
+    
     //custom embed "charges"
-    } else if (args[0] === 'charges') {
-        const { data } = await TT(`/status/charges.json`);
-        let embed = new Discord.MessageEmbed()
-        embed.setColor('#5B00C9')
-        embed.setAuthor('TT-Api-Bot', 'https://github.com/fluidicon.png',
+} else if (args[0] === 'charges') {
+    const { data } = await TT(`/status/charges.json`);
+    let embed = new Discord.MessageEmbed()
+    embed.setColor('#5B00C9')
+    embed.setAuthor('TT-Api-Bot', 'https://github.com/fluidicon.png',
                 'https://github.com/gtaivmostwanted/TT-Api-Bot')
-        embed.setTitle(`API Charges`)
-        embed.setDescription(`**Charges Remaining**: ${addCommas(data)}`)
-        embed.setTimestamp()
-        msg.channel.send(embed);
-    //Custom Whois Command using Elfshots DB
-    } else if (args[0] === 'whois') {
+    embed.setTitle(`API Charges`)
+    embed.setDescription(`**Charges Remaining**: ${addCommas(data)}`)
+    embed.setFooter('( つ ◕_◕ )つ)', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
+    embed.setTimestamp()
+    msg.channel.send(embed);
+    console.log(data);
+ //Custom Whois Command using Elfshots DB
+} else if (args[0] === 'whois') {
     //async function userProfile(msg, inputTaken, userId, discordId, userName) {
         try{
             if (!args[1]) args[1] = msg.author.id;
-            const data = await getUser(args); 
+            const data = await getUser(args);  
             const inputTaken = data.inputTaken;
             const userId = data.vrpId;
             const userName = data.userName;
@@ -306,103 +309,161 @@ async function commands(msg, bot) {
                 'https://github.com/gtaivmostwanted/TT-Api-Bot')
             embed.setColor('RANDOM');
             embed.setTimestamp()
-	        embed.setFooter('usernames may be outdated', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
+	        embed.setFooter('( つ ◕_◕ )つ)', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
             msg.channel.send(embed);
+            console.log(data);
         } catch(e) {console.log(e); msg.channel.send("Error!")}
-
+          
     //custom embed "Alive" 
-    } else if (args[0] === 'alive') {
+} else if (args[0] === 'alive') {
+    if (!args[1] || Number.isNaN(parseInt(args[1]))) return msg.reply('Please enter a number from 1-10!');
+    const srvId = parseInt(args[1]);
+    try {
+    const { data } = await TT(`${servers[srvId - 1]}/status/alive`);
+    let embed = new Discord.MessageEmbed()
+        embed.setColor('05f415')
+        embed.setTitle(`Status`)
+        embed.setAuthor('TT-Api-Bot', 'https://github.com/fluidicon.png',
+                'https://github.com/gtaivmostwanted/TT-Api-Bot')
+        embed.setDescription(`${addCommas(data.description)}`)
+        embed.setFooter('( つ ◕_◕ )つ)', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
+        embed.setTimestamp()
+        msg.channel.send(embed);
+        console.log(data);
+    } catch (e) {
+        console.log(e);
+        let embed = new Discord.MessageEmbed()
+        embed.setColor('fb0303')
+        embed.setAuthor('TT-Api-Bot', 'https://github.com/fluidicon.png',
+                'https://github.com/gtaivmostwanted/TT-Api-Bot')
+        embed.setTitle(`Status`)
+        embed.setDescription(`${(e)}`)
+        embed.setFooter('( つ ◕_◕ )つ)', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
+        embed.setTimestamp()
+        msg.channel.send(embed);
+        console.log(data);
+        }  
+        //custom embed "Forecast" 
+        } else if (args[0] === 'forecast') {
         if (!args[1] || Number.isNaN(parseInt(args[1]))) return msg.reply('Please enter a number from 1-10!');
         const srvId = parseInt(args[1]);
         try {
-        const { data } = await TT(`${servers[srvId - 1]}/status/alive`);
-        let embed = new Discord.MessageEmbed()
-            embed.setColor('05f415')
-            embed.setTitle(`Status`)
-            embed.setDescription(`${addCommas(data.description)}`)
-            embed.setTimestamp()
-            msg.channel.send(embed);
-        } catch (e) {
-            console.log(e);
-            let embed = new Discord.MessageEmbed()
-            embed.setColor('fb0303')
-            embed.setTitle(`Status`)
-            embed.setDescription(`${(e)}`)
-            embed.setTimestamp()
-            msg.channel.send(embed);
-        }
-    //custom embed "Commands"
-    } else if (args[0] === 'commands') {
+         const { data } = await TT(`${servers[srvId - 1]}/status/forecast.json`);
+         let embed = new Discord.MessageEmbed()
+         embed.setColor('#5B00C9')
+         embed.setTitle(`Current Forecast`)
+         embed.setAuthor('TT-Api-Bot', 'https://github.com/fluidicon.png',
+                'https://github.com/gtaivmostwanted/TT-Api-Bot')
+         embed.setDescription(`Weather Forecast: ${addCommas(data)}`)
+         embed.setTimestamp()
+         embed.setFooter('**BETA SERVER ONLY COMMAND**', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
+         msg.channel.send(embed);
+         console.log(data);
+         } catch (e) {
+         console.log(e);
+         msg.reply('Uh oh, server seems unresponsive! ' + e);
+         }
+        //custom embed "Weather" 
+        } else if (args[0] === 'weather') {
+        if (!args[1] || Number.isNaN(parseInt(args[1]))) return msg.reply('Please enter a number from 1-10!');
+        const srvId = parseInt(args[1]);
         try {
-        const commandsembed = {
-            color: 750250,
-            author: {
-            name: 'Tycoon Stats',
-            url: 'http://discord.gg/3p2pQSxZRW',
-            },
-            description: 'Available Commands',
-            thumbnail: {
-            url: 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png',
-            },
-            fields: [
-            {
-                name: 'Server [1~10]',
-                value: 'Show users in the selected server',
-                inline: false,
-            },
-            {
-                name: 'Economy',
-                value: 'Display the economy over the past few hours',
-                inline: false,
-            },
-            {
-                name: 'Charges',
-                value: 'Show the remaining API charges of the bot',
-                inline: false,
-            },
-            {
-                name: 'Wealth [vRp id]',
-                value: "Show the player's wealth while they are online",
-                inline: false,
-            },
-            {
-                name: 'Inventory [vRp id]',
-                value: "Show the selected player's inventory",
-                inline: false,
-            },
-            {
-                name: 'Backpack [vRp id]',
-                value: "Show the contents of the selected player's backpack",
-                inline: false,
-            },
-            {
-                name: 'Skills [vRp id]',
-                value: "Show the selected player's skills",
-                inline: false,
-            },
-            {
-                name: 'SOTD',
-                value: 'Show current Skill of The Day with bonus percentage',
-                inline: false,
-            },
-            {
-                name: 'Alive [1~10]',
-                value: 'Shows if the selected server is online',
-                inline: false,
-            },
-            {
-                name: 'WhoIs [vRp id or Discord id]',
-                value: "Show the selected player's information",
-                inline: false,
-            },
-            ],
-        };
-        msg.channel.send({ embed: commandsembed });
-        } catch (e) {
-        console.log(e);
-        msg.channel.send('...' + e);
-        }
-        
+        const { data } = await TT(`${servers[srvId - 1]}/status/weather.json`);
+        let embed = new Discord.MessageEmbed()
+         embed.setColor('#5B00C9')
+         embed.setTitle(`**Current Weather**`)
+         embed.setAuthor('TT-Api-Bot', 'https://github.com/fluidicon.png',
+                'https://github.com/gtaivmostwanted/TT-Api-Bot')
+         embed.setDescription(`**${(data.weather)}**`)
+         embed.setFooter('**BETA SERVER ONLY COMMAND**', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
+         embed.setTimestamp()
+         msg.channel.send(embed);
+         console.log(data);
+         } catch (e) {
+         console.log(e);
+         msg.reply('Uh oh, server seems unresponsive! ' + e);
+         } 
+    //custom embed "Commands"
+        } else if (args[0] === 'commands') {
+            try {
+            const commandsembed = {
+                color: 1400250,
+                author: {
+                name: 'Tycoon Stats',
+                url: 'http://discord.gg/3p2pQSxZRW',
+                },
+                description: 'Available Commands',
+                thumbnail: {
+                url: 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png',
+                },
+                fields: [
+                {
+                    name: 'Server [1~10]',
+                    value: 'Show users in the selected server',
+                    inline: false,
+                },
+                {
+                    name: 'Economy',
+                    value: 'Display the economy over the past few hours',
+                    inline: false,
+                },
+                {
+                    name: 'Charges',
+                    value: 'Show the remaining API charges of the bot',
+                    inline: false,
+                },
+                {
+                    name: 'Wealth [vRp id]',
+                    value: "Show the player's wealth while they are online",
+                    inline: false,
+                },
+                {
+                    name: 'Inventory [vRp id]',
+                    value: "Show the selected player's inventory",
+                    inline: false,
+                },
+                {
+                    name: 'Backpack [vRp id]',
+                    value: "Show the contents of the selected player's backpack",
+                    inline: false,
+                },
+                {
+                    name: 'Skills [vRp id]',
+                    value: "Show the selected player's skills",
+                    inline: false,
+                },
+                {
+                    name: 'SOTD',
+                    value: 'Show current Skill of The Day with bonus percentage',
+                    inline: false,
+                },
+                {
+                    name: 'Alive [1~10]',
+                    value: 'Shows if the selected server is online',
+                    inline: false,
+                },
+                {
+                    name: 'WhoIs [vRp id or Discord id]',
+                    value: "Show the selected player's information",
+                    inline: false,
+                },
+                {
+                    name: 'Weather [1~10]',
+                    value: "Show the current weather on selected server",
+                    inline: false,
+                },
+                {
+                    name: 'Forecast [1~10]',
+                    value: "Show the current forecast on selected server",
+                    inline: false,
+                },
+                ],
+            };
+            msg.channel.send({ embed: commandsembed });
+            } catch (e) {
+            console.log(e);
+            msg.channel.send('...' + e);
+            }
             // Generic .json response shit
             } else {
             const response = await TT('/status/' + `${args[0]}${args[1] ? `/${args[1]}` : ''}`);
