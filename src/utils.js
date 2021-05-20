@@ -68,28 +68,31 @@ function processErrorCode(code) {
 }
 
 async function getServer(userId = null) {
-  if (parseInt(userId) > 1000000) {
-    let obj = await getUser(['', userId]);
-    var userId = obj.vrpId;
-  }
-  var activeServer = null;
-  for (const server of servers){
-    try {
-      const { data:{ players } } = await axios.get(`${server}/status/widget/players.json`);
-      if (!players) continue;
-      if (userId) {
-        for (const player of players) {
-          if (player[2] == userId) {
-            activeServer = server;
-            break;
+  try {
+    if (parseInt(userId) > 1000000) {
+      let obj = await getUser(['', userId]);
+      if (!obj) return;
+      var userId = obj.vrpId;
+    }
+    var activeServer = null;
+    for (const server of servers){
+      try {
+        const { data:{ players } } = await axios.get(`${server}/status/widget/players.json`);
+        if (!players) continue;
+        if (userId) {
+          for (const player of players) {
+            if (player[2] == userId) {
+              activeServer = server;
+              break;
+            };
           };
-        };
-      }
-      else { activeServer = server; break; };
-    } catch(e) { continue };
-    if (activeServer) break;
-  }
-  return activeServer
+        }
+        else { activeServer = server; break; };
+      } catch(e) { continue };
+      if (activeServer) break;
+    }
+    return activeServer
+  } catch(e) { console.log(e); }
 }
 
 async function sotdGen() {
