@@ -41,6 +41,7 @@ const servers = [
   //What endpoints can take a user id?
   const userCapablePoints = [
     'wealth',
+    'whereis',
   ]
 
      async function commands(msg, bot) {
@@ -55,10 +56,10 @@ const servers = [
      const serverSelection = userCapablePoints.includes(args[0]) ? await getServer(args[1]) : await getServer();
 
      if (userCapablePoints.includes(args[0]) && !serverSelection) {
-     msg.channel.send(`User not found`); return;
+        msg.channel.send(`User not found`); return;
      } 
      else if (!serverSelection) {
-     msg.channel.send(`Could not find an active server`); return;
+        msg.channel.send(`Could not find an active server`); return;
      };
      //Tycoon Server Selection And Key
      const TT = axios.create({
@@ -240,45 +241,46 @@ const servers = [
     msg.channel.send(new Discord.MessageAttachment(img, `napsack-${args[1]}.png`));
 
     //custom command "SOTD"
-} else if (args[0] === 'sotd') {
-    msg.channel.send(await sotdGen());
+    } else if (args[0] === 'sotd') {
+        msg.channel.send(await sotdGen());
    //custom embed "Wealth"
-} else if (args[0] === 'wealth') {
-    try {
-        const dbdata = await getUser(args);
-            if (!dbdata.vrpId && parseInt(args[1]) > 1000000) msg.channel.send("User not found");
-            var { data } = await TT(`/status/wealth/${dbdata.vrpId ? dbdata.vrpId : args[1] }`);
-        if (!data) return;
-        if (data.code == '412') { msg.channel.send('User not online'); return; }
-    let embed = new Discord.MessageEmbed()
-    embed.setColor('#5B00C9')
-    embed.setAuthor('TT-Api-Bot', 'https://github.com/fluidicon.png',
-                'https://github.com/gtaivmostwanted/TT-Api-Bot')
-    embed.setTitle(`**Wealth of** ${dbdata.userName}`)
-    embed.setDescription(`**Wallet**: $${addCommas(data.wallet)}\n**Bank**: $${addCommas(data.bank)}`)
-    if (discordAv) embed.setImage(dbdata.discordAv)
-	embed.setFooter('( つ ◕_◕ )つ Tycoon', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
-    embed.setTimestamp()
-    msg.channel.send(embed);
-    } catch(err) {
-    console.log(err);
-    msg.channel.send(err);
+    } else if (args[0] === 'wealth') {
+        try {
+            const dbdata = await getUser(args);
+                if (!dbdata.vrpId && parseInt(args[1]) > 1000000) msg.channel.send("User not found");
+                const { data } = await TT(`/status/wealth/${dbdata.vrpId ? dbdata.vrpId : args[1] }`);
+            if (!data) return;
+            if (data.code == '412') { msg.channel.send('User not online'); return;
+        }
+        let embed = new Discord.MessageEmbed()
+        embed.setColor('#5B00C9')
+        embed.setAuthor('TT-Api-Bot', 'https://github.com/fluidicon.png',
+                    'https://github.com/gtaivmostwanted/TT-Api-Bot')
+        embed.setTitle(`**Wealth of** ${dbdata.userName}`)
+        embed.setDescription(`**Wallet**: $${addCommas(data.wallet)}\n**Bank**: $${addCommas(data.bank)}`)
+        if (discordAv) embed.setImage(dbdata.discordAv)
+        embed.setFooter('( つ ◕_◕ )つ Tycoon', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
+        embed.setTimestamp()
+        msg.channel.send(embed);
+        } catch(err) {
+        console.log(err);
+        msg.channel.send(err);
     }
     
     //custom embed "charges"
-} else if (args[0] === 'charges') {
-    const { data } = await TT(`/status/charges.json`);
-    let embed = new Discord.MessageEmbed()
-    embed.setColor('#5B00C9')
-    embed.setAuthor('TT-Api-Bot', 'https://github.com/fluidicon.png',
-                'https://github.com/gtaivmostwanted/TT-Api-Bot')
-    embed.setTitle(`API Charges`)
-    embed.setDescription(`**Charges Remaining**: ${addCommas(data)}`)
-    embed.setFooter('( つ ◕_◕ )つ Tycoon', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
-    embed.setTimestamp()
-    msg.channel.send(embed);
- //Custom Whois Command using Elfshots DB
-} else if (args[0] === 'whois') {
+    } else if (args[0] === 'charges') {
+        const { data } = await TT(`/status/charges.json`);
+        let embed = new Discord.MessageEmbed()
+        embed.setColor('#5B00C9')
+        embed.setAuthor('TT-Api-Bot', 'https://github.com/fluidicon.png',
+                    'https://github.com/gtaivmostwanted/TT-Api-Bot')
+        embed.setTitle(`API Charges`)
+        embed.setDescription(`**Charges Remaining**: ${addCommas(data)}`)
+        embed.setFooter('( つ ◕_◕ )つ Tycoon', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
+        embed.setTimestamp()
+        msg.channel.send(embed);
+    //Custom Whois Command using Elfshots DB
+    } else if (args[0] === 'whois') {
     //async function userProfile(msg, inputTaken, userId, discordId, userName) {
         try{
             if (!args[1]) args[1] = msg.author.id;
@@ -315,8 +317,10 @@ const servers = [
             msg.channel.send(embed);
         } catch(e) {console.log(e); msg.channel.send("Error!")}
           
-    //custom embed "Alive" 
-} else if (args[0] === 'alive') {
+    
+        //custom embed "Alive" 
+
+    } else if (args[0] === 'alive') {
     if (!args[1] || Number.isNaN(parseInt(args[1]))) return msg.reply('Please enter a number from 1-10!');
     const srvId = parseInt(args[1]);
     try {
@@ -342,6 +346,7 @@ const servers = [
         embed.setTimestamp()
         msg.channel.send(embed);
         }  
+        
         //custom embed "Forecast" 
         } else if (args[0] === 'forecast') {
         if (!args[1] || Number.isNaN(parseInt(args[1]))) return msg.reply('Please enter a number from 1-10!');
@@ -361,7 +366,8 @@ const servers = [
          console.log(e);
          msg.reply('Uh oh, server seems unresponsive! ' + e);
          }
-        //custom embed "Weather" 
+        
+         //custom embed "Weather" 
         } else if (args[0] === 'weather') {
         if (!args[1] || Number.isNaN(parseInt(args[1]))) return msg.reply('Please enter a number from 1-10!');
         const srvId = parseInt(args[1]);
@@ -379,7 +385,46 @@ const servers = [
          } catch (e) {
          console.log(e);
          msg.reply('Uh oh, server seems unresponsive! ' + e);
-         } 
+        } 
+    } else if (args[0] === 'whereis') {
+        try {
+            var playerObj = {};
+            const dbdata = await getUser(args);
+                if (!dbdata.vrpId && parseInt(args[1]) > 1000000) msg.channel.send("User not found");
+                const { data: { players } } = await TT(`/status/map/positions.json`);
+            if (!players) return;
+            let found = false;
+            for (let i = 0; i < players.length; i++) {
+                let element = players[i];
+                if (element[2] != (dbdata.vrpId ? dbdata.vrpId : args[1])) continue;
+                else if (element[2] == (dbdata.vrpId ? dbdata.vrpId : args[1])) {
+                    playerObj = {
+                        name: element[0],
+                        xyz: element[3],
+                        vehicle: element[4]['vehicle_name'],
+                        job: element[5]['name'],
+                    }
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) { msg.channel.send('Player not found'); return; }
+            let server = `S${servers.indexOf(serverSelection) + 1}`
+
+            let embed = new Discord.MessageEmbed()
+                embed.setColor('#5B00C9')
+                embed.setTitle(`**Location of ${playerObj.name} - ${server}**`)
+                embed.setAuthor('TT-Api-Bot', 'https://github.com/fluidicon.png',
+                    'https://github.com/gtaivmostwanted/TT-Api-Bot')
+                embed.addField('Position:', `${playerObj.xyz.x}, ${playerObj.xyz.y}`, true)
+                embed.addField('Job:', `${playerObj.job}`, true)
+                embed.addField('Vehicle:', `${playerObj.vehicle}`, true)
+                embed.addField('Map:', `https://ttmap.eu/?x=${playerObj.xyz.x}&y=${playerObj.xyz.y}&hideicons`, true)
+                embed.setTimestamp()
+            msg.channel.send(embed);
+
+        } catch (e) { console.log(e) }
+         
     //custom embed "Commands"
         } else if (args[0] === 'commands') {
             try {
