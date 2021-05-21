@@ -13,10 +13,6 @@ bot.on('ready', () => {
   console.info('TTApiBot is now operational with alot of help from logan & elfshot');
   bot.user.setActivity('Transport Tycoon', { type: 'WATCHING' });
   sotdTimer();
-  setTimeout(() => {
-    sotdTimer();
-    // modify the *5 for minutes
-  }, ((1000 * 60) * 5) );
 });
 
 bot.on('message', async (msg) => {
@@ -36,6 +32,11 @@ function sotdTimer() {
         lastSOTD = date.getUTCDate();
         })();
     }catch(err){console.log(err)}
+    
+    setTimeout(() => {
+      sotdTimer();
+      // modify the *5 for minutes
+    }, ((1000 * 60) * 5) );
 }
 
 //Credits:sadboilogan"Almost complete bot Re-Write, Elfshot#0007 "shtuff"
