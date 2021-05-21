@@ -3,28 +3,6 @@ const { addCommas, createAndSendTemp, msToTime, useTemplate, processErrorCode, g
 const htmlToImage = require('node-html-to-image');
 const Discord = require('discord.js');
 const axios = require('axios');
-//const bot = [];
-var lastSOTD;
-
-function sotdTimer(botArg) {
-    if (botArg) bot.push(botArg);
-    const date = new Date();
-    try {
-      (async () => {
-        if (lastSOTD == date.getUTCDate()) return;
-        if (date.getUTCHours() == 0 && date.getUTCMinutes() >= 10 && 
-        date.getUTCMinutes() < 20) {
-        bot[0].channels.cache.get(process.env.SOTDCHANNEL).send(await sotdGen());
-        }
-        lastSOTD = date.getUTCDate();
-      })();
-    }catch(err){console.log(err)}
-    
-    setTimeout(() => {
-        sotdTimer();
-        // modify the *5 for minutes
-      }, ((1000 * 60) * 5) );
-  }
 
 const servers = [
     'http://server.tycoon.community:30120',
@@ -525,5 +503,4 @@ const servers = [
       
       module.exports = {
           commands,
-          sotdTimer,
       }
