@@ -21,22 +21,22 @@ bot.on('message', async (msg) => {
 
 
 function sotdTimer() {
-    const date = new Date();
-    try {
-        (async () => {
-        if (lastSOTD == date.getUTCDate()) return;
-        if (date.getUTCHours() == 0 && date.getUTCMinutes() >= 10 && 
+  const date = new Date();
+  try {
+    (async () => {
+      if (lastSOTD == date.getUTCDate()) return;
+      if (date.getUTCHours() == 0 && date.getUTCMinutes() >= 10 && 
         date.getUTCMinutes() < 20) {
-            bot.channels.cache.get(process.env.SOTDCHANNEL).send(await sotdGen());
-        }
-        lastSOTD = date.getUTCDate();
-        })();
-    }catch(err){console.log(err)}
+        bot.channels.cache.get(process.env.SOTDCHANNEL).send(await sotdGen());
+      }
+      lastSOTD = date.getUTCDate();
+    })();
+  }catch(err){console.log(err);}
     
-    setTimeout(() => {
-      sotdTimer();
-      // modify the *5 for minutes
-    }, ((1000 * 60) * 5) );
+  setTimeout(() => {
+    sotdTimer();
+    // modify the *5 for minutes
+  }, ((1000 * 60) * 5) );
 }
 
 //Credits:sadboilogan"Almost complete bot Re-Write, Elfshot#0007 "shtuff"
