@@ -293,7 +293,7 @@ async function commands(msg, bot) {
         embed.setTimestamp();
         embed.setFooter('( つ ◕_◕ )つ Tycoon', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
         msg.channel.send(embed);
-      } catch(e) {console.log(e); msg.channel.send('Error!');}
+      } catch(e) {console.log(e); msg.channel.send("Error!");}
           
     
       //custom embed "Alive" 
