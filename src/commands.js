@@ -340,6 +340,7 @@ async function commands(msg, bot) {
         embed.setTimestamp();
         embed.setFooter('**BETA SERVER ONLY COMMAND**', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
         msg.channel.send(embed);
+        console.log(data);
       } catch (e) {
         console.log(e);
         msg.reply('Uh oh, server seems unresponsive! ' + e);
@@ -360,6 +361,7 @@ async function commands(msg, bot) {
         embed.setFooter('**BETA SERVER ONLY COMMAND**', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
         embed.setTimestamp();
         msg.channel.send(embed);
+        console.log(data);
       } catch (e) {
         console.log(e);
         msg.reply('Uh oh, server seems unresponsive! ' + e);
