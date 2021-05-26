@@ -5,7 +5,7 @@ const Discord = require('discord.js');
 const axios = require('axios');
 
 const servers = [
-  'http://server.tycoon.community:30130',
+  'http://server.tycoon.community:30169',
   'http://server.tycoon.community:30122',
   'http://server.tycoon.community:30123',
   'http://server.tycoon.community:30124',

@@ -7,7 +7,7 @@ const axios = require('axios');
 const itemsInfo = JSON.parse((fs.readFileSync(join(__dirname.split('\\src')[0], '\\itemsInfo.json')).toString()));
 
 const servers = [
-  'http://server.tycoon.community:30130',
+  'http://server.tycoon.community:30169',
   'http://server.tycoon.community:30122',
   'http://server.tycoon.community:30123',
   'http://server.tycoon.community:30124',
