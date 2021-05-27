@@ -84,27 +84,26 @@ async function getServer(userId = null) {
             if (player[2] == userId) {
               activeServer = server;
               break;
-            };
-          };
+            }
+          }
         }
-        else { activeServer = server; break; };
-      } catch(e) { continue };
+        else { activeServer = server; break; }
+      } catch(e) { continue; }
       if (activeServer) break;
     }
-    return activeServer
+    return activeServer;
   } catch(e) { console.log(e); }
 }
 
 async function sotdGen() {
   try {
     const { data } = await axios.get(`${await getServer()}/status/skillrotation.json`, {
-      headers: { 'X-Tycoon-Key': process.env.TYCOONTOKEN }, timeout: 5000});
-    const date = new Date();
-    let embed = new Discord.MessageEmbed()
-      embed.setColor('#5B00C9')
-      embed.setTitle(`Skill of the Day -`)
-      embed.setDescription(`**Skill**: ${data.skill}\n**Bonus**: ${data.bonus}%`)
-      embed.setTimestamp()
+      headers: { 'X-Tycoon-Key': process.env.TYCOONTOKEN }, timeout: 5000 });
+    let embed = new Discord.MessageEmbed();
+    embed.setColor('#5B00C9');
+    embed.setTitle('Skill of the Day -');
+    embed.setDescription(`**Skill**: ${data.skill}\n**Bonus**: ${data.bonus}%`);
+    embed.setTimestamp();
     return embed;
   } catch(err) {
     console.log(err);
@@ -120,10 +119,10 @@ async function getUser(args) {
     const BASE_URL = process.env.USERLINK;
     if (!BASE_URL) console.log('This command will not function on self-hosted instances of this bot.');
 
-    var { data: { data } } = await axios.get(BASE_URL + (parseInt(args[1]) < 1000000 ? `vrpid=${args[1]}` : `discordid=${args[1]}` )) 
+    var { data: { data } } = await axios.get(BASE_URL + (parseInt(args[1]) < 1000000 ? `vrpid=${args[1]}` : `discordid=${args[1]}` ));
     if (data.error) { console.log(data.error); return; }
     
-    if (data.discordId == null) data.discordId = "Not found"    
+    if (data.discordId == null) data.discordId = 'Not found';
     data.inputTaken = args[1];
 
   } catch(err) {
@@ -133,7 +132,7 @@ async function getUser(args) {
 }
 
 function itemIdToName(itemId) {
-  let returnItem = itemsInfo[itemId] ? [itemsInfo[itemId].name, itemsInfo[itemId].weight] : null
+  let returnItem = itemsInfo[itemId] ? [itemsInfo[itemId].name, itemsInfo[itemId].weight] : null;
   return returnItem;
 }
 

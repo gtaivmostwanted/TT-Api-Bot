@@ -25,7 +25,7 @@ const userCapablePoints = [
 async function commands(msg, bot) {
   var args = msg.content.toLowerCase().split(' ');
   const prefix = args.shift();
-  if (prefix !== '-tt') return;
+  if (prefix !== '-td') return;
 
   // Process what specific command the user has typer, will determine path & processing
   if (args.length < 1) return;
@@ -186,37 +186,43 @@ async function commands(msg, bot) {
       //Elfshots Custom Backpack Inventory Viewer
     }
     else if (args[0] === 'backpack') {
-      const { data: { data: inventory } } = await TT(`/status/chest/u${args[1]}backpack`);
-      const items = [];
+      try {
+        const { data: { data: inventory } } = await TT(`/status/chest/u${args[1]}backpack`);
+        const items = [];
 
-      Object.keys(inventory).forEach((itemId) => {
-        let name = itemIdToName(itemId)[0];
-        if (!name) name = itemId; 
-        items.push({
-          name: name,
-          amount: inventory[itemId].amount,
-          stripped: name.replace(/(<([^>]+)>)/gi, ''),
-        });
-      });
-
-      items.sort((a, b) => a.stripped.localeCompare(b.stripped));
-
-      const rows = [];
-      const rowLimit = 20;
-    
-      for (let i=0; i < items.length; i += rowLimit) {
-        rows.push(items.slice(i, i + rowLimit));
-      }
-    
-      const img = await htmlToImage({ 
-        html: useTemplate('backpack'),
-        content: {
-          rows,
-          userId: args[1],
-          totalItems: items.length
+        for (const itemId in inventory) {
+          const item = itemIdToName(itemId);
+          let name;
+          if (item) name = item[0];
+          else name = itemId;
+          items.push({
+            name: name,
+            amount: inventory[itemId].amount,
+            stripped: name.replace(/(<([^>]+)>)/gi, ''),
+          });
         }
-      });
-      msg.channel.send(new Discord.MessageAttachment(img, `napsack-${args[1]}.png`));
+
+        items.sort((a, b) => a.stripped.localeCompare(b.stripped));
+
+        const rows = [];
+        const rowLimit = 20;
+      
+        for (let i=0; i < items.length; i += rowLimit) {
+          rows.push(items.slice(i, i + rowLimit));
+        }
+      
+        const img = await htmlToImage({ 
+          html: useTemplate('backpack'),
+          content: {
+            rows,
+            userId: args[1],
+            totalItems: items.length
+          }
+        });
+        msg.channel.send(new Discord.MessageAttachment(img, `napsack-${args[1]}.png`));
+      } catch(err) {
+        console.log(err);
+      }
 
     //custom command "SOTD"
     } else if (args[0] === 'sotd') {
@@ -293,7 +299,7 @@ async function commands(msg, bot) {
         embed.setTimestamp();
         embed.setFooter('( つ ◕_◕ )つ Tycoon', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
         msg.channel.send(embed);
-      } catch(e) {console.log(e); msg.channel.send("Error!");}
+      } catch(e) {console.log(e); msg.channel.send('Error!');}
           
     
       //custom embed "Alive" 
