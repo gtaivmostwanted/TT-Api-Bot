@@ -25,7 +25,7 @@ const userCapablePoints = [
 async function commands(msg, bot) {
   var args = msg.content.toLowerCase().split(' ');
   const prefix = args.shift();
-  if (prefix !== '-td') return;
+  if (prefix !== '-tt') return;
 
   // Process what specific command the user has typer, will determine path & processing
   if (args.length < 1) return;
