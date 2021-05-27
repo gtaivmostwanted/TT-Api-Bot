@@ -5,16 +5,16 @@ const Discord = require('discord.js');
 const axios = require('axios');
 
 const servers = [
-  'http://server.tycoon.community:30169',
-  'http://server.tycoon.community:30122',
-  'http://server.tycoon.community:30123',
-  'http://server.tycoon.community:30124',
-  'http://server.tycoon.community:30125',
-  'http://na.tycoon.community:30120',
-  'http://na.tycoon.community:30122',
-  'http://na.tycoon.community:30123',
-  'http://na.tycoon.community:30124',
-  'http://na.tycoon.community:30125',
+  'https://tycoon-w8r4q4.users.cfx.re',
+  'https://tycoon-2epova.users.cfx.re',
+  'https://tycoon-2epovd.users.cfx.re',
+  'https://tycoon-wdrypd.users.cfx.re',
+  'https://tycoon-njyvop.users.cfx.re',
+  'https://tycoon-2r4588.users.cfx.re',
+  'https://tycoon-npl5oy.users.cfx.re',
+  'https://tycoon-2vzlde.users.cfx.re',
+  'https://tycoon-wmapod.users.cfx.re',
+  'https://tycoon-wxjpge.users.cfx.re',
 ];
   //What endpoints can take a user id?
 const userCapablePoints = [
