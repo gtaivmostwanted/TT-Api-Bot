@@ -344,7 +344,7 @@ async function commands(msg, bot) {
           'https://github.com/gtaivmostwanted/TT-Api-Bot');
         embed.setDescription(`Weather Forecast: ${addCommas(data)}`);
         embed.setTimestamp();
-        embed.setFooter('**BETA SERVER ONLY COMMAND**', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
+        embed.setFooter('( つ ◕_◕ )つ Tycoon', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
         msg.channel.send(embed);
         console.log(data);
       } catch (e) {
@@ -364,14 +364,15 @@ async function commands(msg, bot) {
         embed.setAuthor('TT-Api-Bot', 'https://github.com/fluidicon.png',
           'https://github.com/gtaivmostwanted/TT-Api-Bot');
         embed.setDescription(`**${(data.weather)}**`);
-        embed.setFooter('**BETA SERVER ONLY COMMAND**', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
+        embed.setFooter('( つ ◕_◕ )つ Tycoon', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
         embed.setTimestamp();
         msg.channel.send(embed);
         console.log(data);
       } catch (e) {
         console.log(e);
         msg.reply('Uh oh, server seems unresponsive! ' + e);
-      } 
+      }
+      //custom embed "whereis"
     } else if (args[0] === 'whereis') {
       try {
         var playerObj = {};
