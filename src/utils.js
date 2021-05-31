@@ -7,16 +7,16 @@ const axios = require('axios');
 const itemsInfo = JSON.parse((fs.readFileSync(join(__dirname.split('\\src')[0], '\\itemsInfo.json')).toString()));
 
 const servers = [
-  'http://server.tycoon.community:30130',
-  'http://server.tycoon.community:30122',
-  'http://server.tycoon.community:30123',
-  'http://server.tycoon.community:30124',
-  'http://server.tycoon.community:30125',
-  'http://na.tycoon.community:30120',
-  'http://na.tycoon.community:30122',
-  'http://na.tycoon.community:30123',
-  'http://na.tycoon.community:30124',
-  'http://na.tycoon.community:30125',
+  'https://tycoon-w8r4q4.users.cfx.re',
+  'https://tycoon-2epova.users.cfx.re',
+  'https://tycoon-2epovd.users.cfx.re',
+  'https://tycoon-wdrypd.users.cfx.re',
+  'https://tycoon-njyvop.users.cfx.re',
+  'https://tycoon-2r4588.users.cfx.re',
+  'https://tycoon-npl5oy.users.cfx.re',
+  'https://tycoon-2vzlde.users.cfx.re',
+  'https://tycoon-wmapod.users.cfx.re',
+  'https://tycoon-wxjpge.users.cfx.re',
 ];
 
 function createAndSendTemp(msg, data, fileName) {
@@ -84,27 +84,26 @@ async function getServer(userId = null) {
             if (player[2] == userId) {
               activeServer = server;
               break;
-            };
-          };
+            }
+          }
         }
-        else { activeServer = server; break; };
-      } catch(e) { continue };
+        else { activeServer = server; break; }
+      } catch(e) { continue; }
       if (activeServer) break;
     }
-    return activeServer
+    return activeServer;
   } catch(e) { console.log(e); }
 }
 
 async function sotdGen() {
   try {
     const { data } = await axios.get(`${await getServer()}/status/skillrotation.json`, {
-      headers: { 'X-Tycoon-Key': process.env.TYCOONTOKEN }, timeout: 5000});
-    const date = new Date();
-    let embed = new Discord.MessageEmbed()
-      embed.setColor('#5B00C9')
-      embed.setTitle(`Skill of the Day -`)
-      embed.setDescription(`**Skill**: ${data.skill}\n**Bonus**: ${data.bonus}%`)
-      embed.setTimestamp()
+      headers: { 'X-Tycoon-Key': process.env.TYCOONTOKEN }, timeout: 5000 });
+    let embed = new Discord.MessageEmbed();
+    embed.setColor('#5B00C9');
+    embed.setTitle('Skill of the Day -');
+    embed.setDescription(`**Skill**: ${data.skill}\n**Bonus**: ${data.bonus}%`);
+    embed.setTimestamp();
     return embed;
   } catch(err) {
     console.log(err);
@@ -120,10 +119,10 @@ async function getUser(args) {
     const BASE_URL = process.env.USERLINK;
     if (!BASE_URL) console.log('This command will not function on self-hosted instances of this bot.');
 
-    var { data: { data } } = await axios.get(BASE_URL + (parseInt(args[1]) < 1000000 ? `vrpid=${args[1]}` : `discordid=${args[1]}` )) 
+    var { data: { data } } = await axios.get(BASE_URL + (parseInt(args[1]) < 1000000 ? `vrpid=${args[1]}` : `discordid=${args[1]}` ));
     if (data.error) { console.log(data.error); return; }
     
-    if (data.discordId == null) data.discordId = "Not found"    
+    if (data.discordId == null) data.discordId = 'Not found';
     data.inputTaken = args[1];
 
   } catch(err) {
@@ -133,7 +132,7 @@ async function getUser(args) {
 }
 
 function itemIdToName(itemId) {
-  let returnItem = itemsInfo[itemId] ? [itemsInfo[itemId].name, itemsInfo[itemId].weight] : null
+  let returnItem = itemsInfo[itemId] ? [itemsInfo[itemId].name, itemsInfo[itemId].weight] : null;
   return returnItem;
 }
 

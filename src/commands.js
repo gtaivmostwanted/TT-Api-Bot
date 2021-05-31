@@ -5,16 +5,16 @@ const Discord = require('discord.js');
 const axios = require('axios');
 
 const servers = [
-  'http://server.tycoon.community:30130',
-  'http://server.tycoon.community:30122',
-  'http://server.tycoon.community:30123',
-  'http://server.tycoon.community:30124',
-  'http://server.tycoon.community:30125',
-  'http://na.tycoon.community:30120',
-  'http://na.tycoon.community:30122',
-  'http://na.tycoon.community:30123',
-  'http://na.tycoon.community:30124',
-  'http://na.tycoon.community:30125',
+  'https://tycoon-w8r4q4.users.cfx.re',
+  'https://tycoon-2epova.users.cfx.re',
+  'https://tycoon-2epovd.users.cfx.re',
+  'https://tycoon-wdrypd.users.cfx.re',
+  'https://tycoon-njyvop.users.cfx.re',
+  'https://tycoon-2r4588.users.cfx.re',
+  'https://tycoon-npl5oy.users.cfx.re',
+  'https://tycoon-2vzlde.users.cfx.re',
+  'https://tycoon-wmapod.users.cfx.re',
+  'https://tycoon-wxjpge.users.cfx.re',
 ];
   //What endpoints can take a user id?
 const userCapablePoints = [
@@ -186,37 +186,43 @@ async function commands(msg, bot) {
       //Elfshots Custom Backpack Inventory Viewer
     }
     else if (args[0] === 'backpack') {
-      const { data: { data: inventory } } = await TT(`/status/chest/u${args[1]}backpack`);
-      const items = [];
+      try {
+        const { data: { data: inventory } } = await TT(`/status/chest/u${args[1]}backpack`);
+        const items = [];
 
-      Object.keys(inventory).forEach((itemId) => {
-        let name = itemIdToName(itemId)[0];
-        if (!name) name = itemId; 
-        items.push({
-          name: name,
-          amount: inventory[itemId].amount,
-          stripped: name.replace(/(<([^>]+)>)/gi, ''),
-        });
-      });
-
-      items.sort((a, b) => a.stripped.localeCompare(b.stripped));
-
-      const rows = [];
-      const rowLimit = 20;
-    
-      for (let i=0; i < items.length; i += rowLimit) {
-        rows.push(items.slice(i, i + rowLimit));
-      }
-    
-      const img = await htmlToImage({ 
-        html: useTemplate('backpack'),
-        content: {
-          rows,
-          userId: args[1],
-          totalItems: items.length
+        for (const itemId in inventory) {
+          const item = itemIdToName(itemId);
+          let name;
+          if (item) name = item[0];
+          else name = itemId;
+          items.push({
+            name: name,
+            amount: inventory[itemId].amount,
+            stripped: name.replace(/(<([^>]+)>)/gi, ''),
+          });
         }
-      });
-      msg.channel.send(new Discord.MessageAttachment(img, `napsack-${args[1]}.png`));
+
+        items.sort((a, b) => a.stripped.localeCompare(b.stripped));
+
+        const rows = [];
+        const rowLimit = 20;
+      
+        for (let i=0; i < items.length; i += rowLimit) {
+          rows.push(items.slice(i, i + rowLimit));
+        }
+      
+        const img = await htmlToImage({ 
+          html: useTemplate('backpack'),
+          content: {
+            rows,
+            userId: args[1],
+            totalItems: items.length
+          }
+        });
+        msg.channel.send(new Discord.MessageAttachment(img, `napsack-${args[1]}.png`));
+      } catch(err) {
+        console.log(err);
+      }
 
     //custom command "SOTD"
     } else if (args[0] === 'sotd') {
@@ -293,7 +299,7 @@ async function commands(msg, bot) {
         embed.setTimestamp();
         embed.setFooter('( つ ◕_◕ )つ Tycoon', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
         msg.channel.send(embed);
-      } catch(e) {console.log(e); msg.channel.send("Error!");}
+      } catch(e) {console.log(e); msg.channel.send('Error!');}
           
     
       //custom embed "Alive" 
@@ -338,8 +344,9 @@ async function commands(msg, bot) {
           'https://github.com/gtaivmostwanted/TT-Api-Bot');
         embed.setDescription(`Weather Forecast: ${addCommas(data)}`);
         embed.setTimestamp();
-        embed.setFooter('**BETA SERVER ONLY COMMAND**', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
+        embed.setFooter('( つ ◕_◕ )つ Tycoon', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
         msg.channel.send(embed);
+        console.log(data);
       } catch (e) {
         console.log(e);
         msg.reply('Uh oh, server seems unresponsive! ' + e);
@@ -357,13 +364,15 @@ async function commands(msg, bot) {
         embed.setAuthor('TT-Api-Bot', 'https://github.com/fluidicon.png',
           'https://github.com/gtaivmostwanted/TT-Api-Bot');
         embed.setDescription(`**${(data.weather)}**`);
-        embed.setFooter('**BETA SERVER ONLY COMMAND**', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
+        embed.setFooter('( つ ◕_◕ )つ Tycoon', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
         embed.setTimestamp();
         msg.channel.send(embed);
+        console.log(data);
       } catch (e) {
         console.log(e);
         msg.reply('Uh oh, server seems unresponsive! ' + e);
-      } 
+      }
+      //custom embed "whereis"
     } else if (args[0] === 'whereis') {
       try {
         var playerObj = {};
