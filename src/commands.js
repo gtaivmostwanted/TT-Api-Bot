@@ -291,7 +291,7 @@ async function commands(msg, bot) {
         embed.addField('In-game ID:', userId, true);
         //embed.addField(' ‎',' ‎', false)
         embed.addField('Discord:', discordId, true);
-        embed.addField('Last found:', lastFound.toDateString(), false);
+        embed.addField('Last found:', lastFound.toUTCString(), false);
         if (discordAv) embed.setImage(discordAv);
         embed.setAuthor('TT-Api-Bot', 'https://github.com/fluidicon.png',
           'https://github.com/gtaivmostwanted/TT-Api-Bot');
