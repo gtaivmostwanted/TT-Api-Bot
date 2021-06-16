@@ -250,7 +250,27 @@ async function commands(msg, bot) {
         console.log(err);
         msg.channel.send(err);
       }
-    
+      //custom embed "Snowflake2User"
+    } else if (args[0] === 'snowflake') {
+      try {
+        const { data } = await TT(`/status/snowflake2user/${args[1]}`);
+        if (!data) return;
+        if (data.code == '412') { msg.channel.send('User not online'); return;
+        }
+        let embed = new Discord.MessageEmbed();
+        embed.setColor('#5B00C9');
+        embed.setAuthor('TT-Api-Bot', 'https://github.com/fluidicon.png',
+          'https://github.com/gtaivmostwanted/TT-Api-Bot');
+        embed.setTitle(`**Snowflake For** ${data.user_id}`);
+        embed.setDescription(`**Data Type**: ${(data.type)}\n**Discord ID**: ${(data.discord_id)}`);
+        if (discordAv) embed.setImage(dbdata.discordAv);
+        embed.setFooter('( つ ◕_◕ )つ Tycoon', 'https://cdn.discordapp.com/avatars/826359426457534475/af4862c0f0dcb4daa3b163bbe805d08e.png');
+        embed.setTimestamp();
+        msg.channel.send(embed);
+      } catch(err) {
+        console.log(err);
+        msg.channel.send(err);
+      }
     //custom embed "charges"
     } else if (args[0] === 'charges') {
       const { data } = await TT('/status/charges.json');
