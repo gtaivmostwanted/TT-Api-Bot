@@ -82,6 +82,12 @@ async function commands(msg, bot) {
       // Custom skills command
     } else if (args[0] === 'skills') {
       const { data: { data: { gaptitudes_v } } } = await TT(`/status/data/${args[1]}`);
+    {
+      if(err) {
+        console.log(err);
+        msg.channel.send(err);
+      }
+    }
       const skillArr = [];
 
       Object.keys(gaptitudes_v).forEach((cat) => {
