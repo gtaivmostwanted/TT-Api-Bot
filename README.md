@@ -14,6 +14,8 @@ Made with help from
 https://github.com/sadboilogan
 https://github.com/Elfshot
 
-if you dont want to self host you can invite the hosted bot to your server
-https://discord.com/api/oauth2/authorize?client_id=826359426457534475&permissions=67226624&scope=bot
 DM me on TT discord for invite to the DEV server for the bot
+
+
+This Bot is no longer in active development as it has reached the end goal of being able to use all of the Tycoon API Endpoints
+further development is only happening on our private bot that you can invite by DMing Gtaivmostwanted#2083

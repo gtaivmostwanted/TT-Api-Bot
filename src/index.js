@@ -11,7 +11,7 @@ bot.login(TOKEN);
 //Bot Starting And Console Output
 bot.on('ready', () => {
   console.info('TTApiBot is now operational with alot of help from logan & elfshot');
-  bot.user.setActivity('Transport Tycoon', { type: 'WATCHING' });
+  bot.user.setActivity('Dying in Peace', { type: 'PLAYING' });
   sotdTimer();
 });
 
