@@ -166,7 +166,7 @@ async function commands(msg, bot) {
         const { data } = await TT('/status/economy.csv');
         const splitEconomy = data.split('\n');
         splitEconomy.pop();
-        const shortData = splitEconomy.splice(splitEconomy.length - 20);
+        const shortData = splitEconomy.splice(splitEconomy.length - 5);
 
         const economyData = [];
         shortData.forEach((economy) => {
