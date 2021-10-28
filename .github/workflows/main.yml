@@ -1,0 +1,11 @@
+- name: Discord Commits
+  # You may pin to the exact commit or the version.
+  # uses: Sniddl/discord-commits@2da985f8398f434a0aef33d133b13a6b22e49c12
+  uses: Sniddl/discord-commits@v1.3
+  with:
+    # discord webhook url without /github
+    webhook: https://discord.com/api/webhooks/903142640957141042/AsY_GAlMGSxY67oufv_7LXFiQWZ5wtuj0Cm734EQ2Xw3UDIy6B8q-OE5MJ56Che-OTSK
+    # A general message that is displayed for all commits.
+    message: # optional
+    # JSON string that accepts double braces for templating.
+    embed: # optional
